@@ -11,6 +11,8 @@ A specialized calendar component designed for appointment and booking systems. I
 
 ***Features:***
 - Clean monthly calendar view with intuitive navigation
+- Month and year dropdown selectors for quick date navigation
+- Arrow buttons for previous/next month navigation
 - Three-tier blocking system: available days, recurring weekday blocks, and specific date blocks
 - Visual distinction through color coding (green for available, gray for weekday blocks, red for specific blocks)
 - Current day highlighting with customizable border
@@ -24,12 +26,15 @@ A specialized calendar component designed for appointment and booking systems. I
 - blockedWeekdays: number[] - Array of weekday numbers (0-6, where 0=Sunday) to block across all weeks. Example: [0, 6] blocks all Sundays and Saturdays
 - specificBlocks: object[] - Array of specific date blocks from database with structure: { data_inicio: '2024-01-01', data_fim: '2024-01-05', dia_completo: true, horario_inicio: '09:00', horario_fim: '17:00' }
 - weekdayLabels: string[] - Array of 7 labels for weekdays starting with Sunday. Example: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
+- monthNames: string[] - Array of 12 month names for the dropdown selector. Example: ['Janeiro', 'Fevereiro', 'Março', ...] (default: Portuguese names)
+- startYear: number|null - First year available in year selector. Defaults to current year - 10 if not set
+- endYear: number|null - Last year available in year selector. Defaults to current year + 10 if not set
 - availableColor: string - Background color for available/bookable days (default: '#d4edda' - light green)
 - weekdayBlockColor: string - Background color for recurring weekday blocks (default: '#e9ecef' - light gray)
 - specificBlockColor: string - Background color for specific date blocks (default: '#f8d7da' - light red)
 - currentDayBorderColor: string - Border color for today's date (default: '#007bff' - blue)
 - backgroundColor: string - Calendar container background color
-- headerTextColor: string - Color for month/year header text
+- headerTextColor: string - Color for month/year header text and selectors
 - weekdayTextColor: string - Color for weekday labels row
 - dayTextColor: string - Color for day numbers in calendar grid
 - buttonColor: string - Color for navigation arrow buttons
@@ -42,7 +47,7 @@ A specialized calendar component designed for appointment and booking systems. I
 
 ***Events:***
 - dateClick: Triggered when user clicks on any date. Payload: { date: '2024-01-15' (ISO string), timestamp: 1705276800000, isBlocked: false, blockType: 'available'|'weekday'|'specific', blockInfo: {...} (block object if specific block) }
-- monthChange: Triggered when user navigates to different month. Payload: { month: 'January 2024', direction: 'previous'|'next'|'today' }
+- monthChange: Triggered when user navigates to different month. Payload: { month: 'January 2024', direction: 'previous'|'next'|'today'|'selector' }
 
 ***Exposed Actions:***
 - `goToToday`: Navigate calendar to current month. No arguments
@@ -54,13 +59,17 @@ A specialized calendar component designed for appointment and booking systems. I
 
 ***Notes:***
 - The component uses date-fns library for reliable date calculations and formatting
+- Users can navigate months and years using either arrow buttons or dropdown selectors
+- Month and year selectors are synchronized with arrow navigation
+- The year range defaults to ±10 years from current year but can be customized with startYear and endYear properties
 - Dates outside the current month are displayed with reduced opacity and are not clickable
 - Block priority: specific blocks override weekday blocks when both apply to same date
 - The specificBlocks property is designed to work directly with Supabase query results from a "bloqueios_profissional" table
 - All date inputs should be in ISO format (YYYY-MM-DD) for consistency
 - Time fields (horario_inicio, horario_fim) in specific blocks are stored but not currently used for visual display - they're available in the click event payload for workflow logic
 - The calendar automatically highlights today's date with a distinctive border
-- Navigation buttons are disabled in editor mode to prevent interference with editing
+- Navigation buttons and selectors are disabled in editor mode to prevent interference with editing
 - All interactions are disabled when isEditing is true to ensure proper editor behavior
 - The component is fully responsive and will adapt to its container width
 - Color customization allows matching any design system or brand guidelines
+- Month names are customizable and default to Portuguese, making it easy to support any language

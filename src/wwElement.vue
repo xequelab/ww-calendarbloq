@@ -1,21 +1,43 @@
 <template>
   <div class="appointment-calendar" :style="containerStyles">
     <div class="calendar-header">
-      <button 
-        class="nav-button" 
+      <button
+        class="nav-button"
         @click="previousMonth"
         :disabled="isEditing"
         :style="buttonStyles"
       >
         <span v-html="prevIconHTML"></span>
       </button>
-      
-      <h2 class="month-title" :style="{ color: headerTextColor }">
-        {{ currentMonthYear }}
-      </h2>
-      
-      <button 
-        class="nav-button" 
+
+      <div class="month-year-selectors">
+        <select
+          class="month-selector"
+          v-model="selectedMonth"
+          @change="onMonthChange"
+          :disabled="isEditing"
+          :style="{ color: headerTextColor }"
+        >
+          <option v-for="(month, index) in monthNames" :key="index" :value="index">
+            {{ month }}
+          </option>
+        </select>
+
+        <select
+          class="year-selector"
+          v-model="selectedYear"
+          @change="onYearChange"
+          :disabled="isEditing"
+          :style="{ color: headerTextColor }"
+        >
+          <option v-for="year in yearRange" :key="year" :value="year">
+            {{ year }}
+          </option>
+        </select>
+      </div>
+
+      <button
+        class="nav-button"
         @click="nextMonth"
         :disabled="isEditing"
         :style="buttonStyles"
@@ -96,8 +118,28 @@ export default {
       // eslint-disable-next-line no-unreachable
       return false;
     });
-    
+
     const currentDate = ref(new Date());
+    const selectedMonth = ref(new Date().getMonth());
+    const selectedYear = ref(new Date().getFullYear());
+
+    const monthNames = computed(() =>
+      props.content?.monthNames || [
+        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+      ]
+    );
+
+    const yearRange = computed(() => {
+      const currentYear = new Date().getFullYear();
+      const startYear = props.content?.startYear || currentYear - 10;
+      const endYear = props.content?.endYear || currentYear + 10;
+      const years = [];
+      for (let year = startYear; year <= endYear; year++) {
+        years.push(year);
+      }
+      return years;
+    });
     
     const { value: selectedDate, setValue: setSelectedDate } = wwLib.wwVariable.useComponentVariable({
       uid: props.uid,
@@ -153,46 +195,54 @@ export default {
       });
     };
     
+    const updateCalendar = (direction = null) => {
+      setCurrentMonth(formatMonthYear(currentDate.value));
+      selectedMonth.value = currentDate.value.getMonth();
+      selectedYear.value = currentDate.value.getFullYear();
+
+      if (direction) {
+        emit('trigger-event', {
+          name: 'monthChange',
+          event: {
+            month: formatMonthYear(currentDate.value),
+            direction
+          }
+        });
+      }
+    };
+
+    const onMonthChange = () => {
+      if (isEditing.value) return;
+      const newDate = new Date(currentDate.value);
+      newDate.setMonth(selectedMonth.value);
+      currentDate.value = newDate;
+      updateCalendar('selector');
+    };
+
+    const onYearChange = () => {
+      if (isEditing.value) return;
+      const newDate = new Date(currentDate.value);
+      newDate.setFullYear(selectedYear.value);
+      currentDate.value = newDate;
+      updateCalendar('selector');
+    };
+
     const previousMonth = () => {
       if (isEditing.value) return;
       currentDate.value = navigateMonth(currentDate.value, 'prev');
-      setCurrentMonth(formatMonthYear(currentDate.value));
-      
-      emit('trigger-event', {
-        name: 'monthChange',
-        event: {
-          month: formatMonthYear(currentDate.value),
-          direction: 'previous'
-        }
-      });
+      updateCalendar('previous');
     };
-    
+
     const nextMonth = () => {
       if (isEditing.value) return;
       currentDate.value = navigateMonth(currentDate.value, 'next');
-      setCurrentMonth(formatMonthYear(currentDate.value));
-      
-      emit('trigger-event', {
-        name: 'monthChange',
-        event: {
-          month: formatMonthYear(currentDate.value),
-          direction: 'next'
-        }
-      });
+      updateCalendar('next');
     };
     
     const goToToday = () => {
       if (isEditing.value) return;
       currentDate.value = new Date();
-      setCurrentMonth(formatMonthYear(currentDate.value));
-      
-      emit('trigger-event', {
-        name: 'monthChange',
-        event: {
-          month: formatMonthYear(currentDate.value),
-          direction: 'today'
-        }
-      });
+      updateCalendar('today');
     };
     
     const goToDate = (dateString) => {
@@ -253,9 +303,15 @@ export default {
       calendarDays,
       currentMonthYear,
       weekdayLabels,
+      monthNames,
+      yearRange,
+      selectedMonth,
+      selectedYear,
       getBlockStatus,
       isInCurrentMonth,
       handleDayClick,
+      onMonthChange,
+      onYearChange,
       previousMonth,
       nextMonth,
       goToToday,
@@ -288,13 +344,48 @@ export default {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
-  
-  .month-title {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 600;
+
+  .month-year-selectors {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    select {
+      background: white;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      outline: none;
+
+      &:hover:not(:disabled) {
+        border-color: #9ca3af;
+      }
+
+      &:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background-color: #f3f4f6;
+      }
+    }
+
+    .month-selector {
+      min-width: 130px;
+    }
+
+    .year-selector {
+      min-width: 90px;
+    }
   }
-  
+
   .nav-button {
     background: none;
     border: none;
@@ -305,16 +396,16 @@ export default {
     align-items: center;
     justify-content: center;
     transition: background-color 0.2s ease;
-    
+
     &:hover:not(:disabled) {
       background-color: rgba(0, 0, 0, 0.05);
     }
-    
+
     &:disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
-    
+
     :deep(svg) {
       width: 20px;
       height: 20px;

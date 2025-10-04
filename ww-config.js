@@ -149,7 +149,7 @@ export default {
       /* wwEditor:end */
     },
     weekdayLabels: {
-      label: { 
+      label: {
         en: 'Weekday labels',
         pt: 'Rótulos dos dias'
       },
@@ -176,6 +176,84 @@ export default {
       },
       propertyHelp: {
         tooltip: 'Array of 7 labels for the weekdays, starting with Sunday. Customize these to match your language or preferred abbreviations.'
+      }
+      /* wwEditor:end */
+    },
+    monthNames: {
+      label: {
+        en: 'Month names',
+        pt: 'Nomes dos meses'
+      },
+      type: 'Array',
+      section: 'settings',
+      bindable: true,
+      defaultValue: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+      options: {
+        expandable: true,
+        getItemLabel(_, index) {
+          return `Month ${index + 1}`;
+        },
+        item: {
+          type: 'Text',
+          defaultValue: 'Month',
+          options: { placeholder: 'Month name' }
+        }
+      },
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'array',
+        tooltip: 'Bind to an array of 12 strings representing month names in your preferred language'
+      },
+      propertyHelp: {
+        tooltip: 'Array of 12 month names for the month selector dropdown'
+      }
+      /* wwEditor:end */
+    },
+    startYear: {
+      label: {
+        en: 'Start year',
+        pt: 'Ano inicial'
+      },
+      type: 'Number',
+      section: 'settings',
+      bindable: true,
+      defaultValue: null,
+      options: {
+        min: 1900,
+        max: 2200,
+        step: 1
+      },
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'number',
+        tooltip: 'Starting year for the year selector. Leave empty to default to current year - 10'
+      },
+      propertyHelp: {
+        tooltip: 'First year available in the year selector dropdown. Defaults to 10 years before current year if not set'
+      }
+      /* wwEditor:end */
+    },
+    endYear: {
+      label: {
+        en: 'End year',
+        pt: 'Ano final'
+      },
+      type: 'Number',
+      section: 'settings',
+      bindable: true,
+      defaultValue: null,
+      options: {
+        min: 1900,
+        max: 2200,
+        step: 1
+      },
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'number',
+        tooltip: 'Ending year for the year selector. Leave empty to default to current year + 10'
+      },
+      propertyHelp: {
+        tooltip: 'Last year available in the year selector dropdown. Defaults to 10 years after current year if not set'
       }
       /* wwEditor:end */
     },

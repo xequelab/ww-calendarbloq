@@ -1,84 +1,88 @@
 ---
-name: Appointment Calendar
-description: A monthly calendar component for appointment scheduling with visual availability indicators, support for recurring weekday blocks and specific date range blocks, and click events for workflow integration.
-keywords: calendar, appointment, scheduling, availability, booking, date picker, monthly view, blocked dates, supabase integration
+name: Calendário de Agendamentos
+description: Componente de calendário mensal para agendamentos com indicadores visuais de disponibilidade, suporte para bloqueios semanais recorrentes e bloqueios de datas específicas, e eventos de clique para integração de workflows.
+keywords: calendário, agendamento, disponibilidade, reservas, seletor de datas, visualização mensal, datas bloqueadas, integração supabase, português
 ---
 
-#### Appointment Calendar
+#### Calendário de Agendamentos
 
-***Purpose:***
-A specialized calendar component designed for appointment and booking systems. It displays a monthly view with color-coded availability states, supports both recurring weekly blocks (e.g., weekends) and specific date range blocks from a database, and emits detailed click events for workflow integration in WeWeb.
+***Propósito:***
+Componente especializado de calendário desenvolvido para sistemas de agendamento e reservas. Exibe uma visualização mensal com estados de disponibilidade codificados por cores, suporta bloqueios semanais recorrentes (ex: fins de semana) e bloqueios específicos de datas do banco de dados, emitindo eventos detalhados de clique para integração de workflows no WeWeb. **Configurado para o mercado brasileiro com navegação bloqueada para datas passadas.**
 
-***Features:***
-- Clean monthly calendar view with intuitive navigation
-- Month and year dropdown selectors for quick date navigation
-- Arrow buttons for previous/next month navigation
-- Four-tier blocking system: available days, recurring weekday blocks, partial date blocks, and full-day blocks
-- Visual distinction through color coding (green for available, gray for weekday blocks, light red for partial blocks, dark red for full blocks)
-- Full-day blocked dates display with lock icon and distinct red background
-- Interactive legend showing all availability states with color indicators
-- Current day highlighting with customizable border
-- Hover effects on clickable dates
-- Responsive grid layout that adapts to container size
-- Built with date-fns for reliable date manipulation
-- Fully customizable colors, icons, and labels
-- Bilingual support (English/Portuguese)
+***Funcionalidades:***
+- Visualização de calendário mensal limpa e com navegação intuitiva
+- Seletores dropdown modernos para mês e ano com navegação rápida
+- Botões de seta para navegação entre meses (anterior/próximo)
+- **Bloqueio automático de datas passadas** - Impede seleção de meses/anos anteriores ao atual
+- Sistema de bloqueio em quatro níveis: dias disponíveis, bloqueios semanais recorrentes, bloqueios parciais e bloqueios de dia completo
+- Distinção visual através de codificação por cores (verde para disponível, cinza para bloqueios semanais, vermelho claro para bloqueios parciais, vermelho escuro para bloqueios completos)
+- Datas bloqueadas completamente exibem ícone de cadeado e fundo vermelho distinto
+- Legenda interativa mostrando todos os estados de disponibilidade com indicadores de cores
+- Destaque do dia atual com borda customizável
+- Efeitos hover em datas clicáveis
+- Layout em grade responsivo que se adapta ao tamanho do container
+- Desenvolvido com date-fns para manipulação confiável de datas
+- Cores, ícones e labels totalmente customizáveis
+- Interface 100% em português do Brasil por padrão
 
-***Properties:***
-- blockedWeekdays: number[] - Array of weekday numbers (0-6, where 0=Sunday) to block across all weeks. Example: [0, 6] blocks all Sundays and Saturdays
-- specificBlocks: object[] - Array of specific date blocks from database with structure: { data_inicio: '2024-01-01', data_fim: '2024-01-05', dia_completo: true, horario_inicio: '09:00', horario_fim: '17:00' }
-- weekdayLabels: string[] - Array of 7 labels for weekdays starting with Sunday. Example: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
-- monthNames: string[] - Array of 12 month names for the dropdown selector. Example: ['Janeiro', 'Fevereiro', 'Março', ...] (default: Portuguese names)
-- startYear: number|null - First year available in year selector. Defaults to current year - 10 if not set
-- endYear: number|null - Last year available in year selector. Defaults to current year + 10 if not set
-- availableColor: string - Background color for available/bookable days (default: '#d4edda' - light green)
-- weekdayBlockColor: string - Background color for recurring weekday blocks (default: '#e9ecef' - light gray)
-- specificBlockColor: string - Background color for partial date blocks (default: '#f8d7da' - light red)
-- fullDayBlockColor: string - Background color for completely blocked days with lock icon (default: '#dc3545' - red)
-- blockIcon: string - System icon name for full-day blocked dates (default: 'lock')
-- showLegend: boolean - Display legend explaining color codes and block types (default: true)
-- legendLabels: object - Customizable legend text labels: { available: 'Disponível', weekdayBlock: 'Bloqueio semanal', partialBlock: 'Bloqueio parcial', fullBlock: 'Bloqueado' }
-- currentDayBorderColor: string - Border color for today's date (default: '#007bff' - blue)
-- backgroundColor: string - Calendar container background color
-- headerTextColor: string - Color for month/year header text and selectors
-- weekdayTextColor: string - Color for weekday labels row
-- dayTextColor: string - Color for day numbers in calendar grid
-- buttonColor: string - Color for navigation arrow buttons
-- buttonBackgroundColor: string|null - Background color for navigation buttons (default: transparent)
-- padding: string - Internal padding around calendar content (default: '20px')
-- borderRadius: string - Border radius for rounded corners (default: '8px')
-- boxShadow: string - Shadow effect around calendar (default: '0 2px 8px rgba(0, 0, 0, 0.1)')
-- prevIcon: string - System icon name for previous month button (default: 'chevron-left')
-- nextIcon: string - System icon name for next month button (default: 'chevron-right')
+***Propriedades:***
+- blockedWeekdays: number[] - Array de números de dias da semana (0-6, onde 0=Domingo) para bloquear em todas as semanas. Exemplo: [0, 6] bloqueia todos os domingos e sábados
+- specificBlocks: object[] - Array de bloqueios específicos do banco de dados com estrutura: { data_inicio: '2024-01-01', data_fim: '2024-01-05', dia_completo: true, horario_inicio: '09:00', horario_fim: '17:00' }
+- weekdayLabels: string[] - Array de 7 rótulos para dias da semana começando com domingo. Padrão: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
+- monthNames: string[] - Array de 12 nomes de meses para o seletor dropdown. Padrão: ['Janeiro', 'Fevereiro', 'Março', ...] (nomes em português)
+- startYear: number|null - Primeiro ano disponível no seletor de ano. Padrão: ano atual (não permite anos passados)
+- endYear: number|null - Último ano disponível no seletor de ano. Padrão: ano atual + 10
+- availableColor: string - Cor de fundo para dias disponíveis/reserváveis (padrão: '#d4edda' - verde claro)
+- weekdayBlockColor: string - Cor de fundo para bloqueios semanais recorrentes (padrão: '#e9ecef' - cinza claro)
+- specificBlockColor: string - Cor de fundo para bloqueios parciais de datas (padrão: '#f8d7da' - vermelho claro)
+- fullDayBlockColor: string - Cor de fundo para dias completamente bloqueados com ícone de cadeado (padrão: '#dc3545' - vermelho)
+- blockIcon: string - Nome do ícone do sistema para datas totalmente bloqueadas (padrão: 'lock')
+- showLegend: boolean - Exibir legenda explicando códigos de cores e tipos de bloqueio (padrão: true)
+- legendLabels: object - Rótulos de texto customizáveis da legenda: { available: 'Disponível', weekdayBlock: 'Bloqueio semanal', partialBlock: 'Bloqueio parcial', fullBlock: 'Bloqueado' }
+- currentDayBorderColor: string - Cor da borda para a data de hoje (padrão: '#007bff' - azul)
+- backgroundColor: string - Cor de fundo do container do calendário
+- headerTextColor: string - Cor do texto do cabeçalho mês/ano e seletores
+- weekdayTextColor: string - Cor da linha de rótulos dos dias da semana
+- dayTextColor: string - Cor dos números dos dias na grade do calendário
+- buttonColor: string - Cor dos botões de seta de navegação
+- buttonBackgroundColor: string|null - Cor de fundo dos botões de navegação (padrão: transparent)
+- padding: string - Padding interno ao redor do conteúdo do calendário (padrão: '20px')
+- borderRadius: string - Raio da borda para cantos arredondados (padrão: '8px')
+- boxShadow: string - Efeito de sombra ao redor do calendário (padrão: '0 2px 8px rgba(0, 0, 0, 0.1)')
+- prevIcon: string - Nome do ícone do sistema para botão de mês anterior (padrão: 'chevron-left')
+- nextIcon: string - Nome do ícone do sistema para botão de próximo mês (padrão: 'chevron-right')
 
-***Events:***
-- dateClick: Triggered when user clicks on any date. Payload: { date: '2024-01-15' (ISO string), timestamp: 1705276800000, isBlocked: false, blockType: 'available'|'weekday'|'specific', blockInfo: {...} (block object if specific block) }
-- monthChange: Triggered when user navigates to different month. Payload: { month: 'January 2024', direction: 'previous'|'next'|'today'|'selector' }
+***Eventos:***
+- dateClick: Disparado quando o usuário clica em qualquer data. Payload: { date: '2024-01-15' (string ISO), timestamp: 1705276800000, isBlocked: false, blockType: 'available'|'weekday'|'specific', blockInfo: {...} (objeto de bloqueio se bloqueio específico) }
+- monthChange: Disparado quando o usuário navega para um mês diferente. Payload: { month: 'Janeiro 2024', direction: 'previous'|'next'|'today'|'selector' }
 
-***Exposed Actions:***
-- `goToToday`: Navigate calendar to current month. No arguments
-- `goToDate`: Navigate calendar to specific date. Args: date (string) - ISO format date string like '2024-06-15'
+***Ações Expostas:***
+- `goToToday`: Navegar calendário para o mês atual. Sem argumentos
+- `goToDate`: Navegar calendário para uma data específica. Args: date (string) - String de data em formato ISO como '2024-06-15'
 
-***Exposed Variables:***
-- selectedDate: Last clicked date in ISO format (path: variables['uid-selectedDate'])
-- currentMonth: Currently displayed month and year (path: variables['uid-currentMonth'])
+***Variáveis Expostas:***
+- selectedDate: Última data clicada em formato ISO (caminho: variables['uid-selectedDate'])
+- currentMonth: Mês e ano atualmente exibidos (caminho: variables['uid-currentMonth'])
 
-***Notes:***
-- The component uses date-fns library for reliable date calculations and formatting
-- Users can navigate months and years using either arrow buttons or dropdown selectors
-- Month and year selectors are synchronized with arrow navigation
-- The year range defaults to ±10 years from current year but can be customized with startYear and endYear properties
-- Dates outside the current month are displayed with reduced opacity and are not clickable
-- **Block hierarchy**: Full-day blocks (dia_completo = true) are visually distinct with lock icon and red background; partial blocks show in light red; weekday blocks in gray
-- The specificBlocks property is designed to work directly with Supabase query results from a "bloqueios_profissional" table
-- The `dia_completo` field determines if a specific block shows as full-day blocked (with icon) or partial block
-- All date inputs should be in ISO format (YYYY-MM-DD) for consistency
-- Time fields (horario_inicio, horario_fim) in specific blocks are stored but not currently used for visual display - they're available in the click event payload for workflow logic
-- The calendar automatically highlights today's date with a distinctive border
-- Navigation buttons and selectors are disabled in editor mode to prevent interference with editing
-- All interactions are disabled when isEditing is true to ensure proper editor behavior
-- The component is fully responsive and will adapt to its container width
-- The legend can be hidden by setting showLegend to false
-- All legend labels are customizable for multi-language support
-- Color customization allows matching any design system or brand guidelines
-- The block icon can be changed to any system icon (lock, ban, x-circle, etc.)
+***Notas Importantes:***
+- O componente utiliza a biblioteca date-fns para cálculos e formatação confiável de datas
+- **🚫 Navegação de datas passadas bloqueada**: Usuários NÃO podem navegar para meses/anos anteriores ao atual usando setas ou seletores
+- O botão de "mês anterior" é automaticamente desabilitado quando o calendário está no mês atual
+- Usuários podem navegar por meses e anos usando botões de seta ou seletores dropdown
+- Seletores de mês e ano são sincronizados com a navegação por setas
+- O intervalo de anos padrão é do ano atual até ano atual + 10 (customizável com startYear e endYear)
+- Datas fora do mês atual são exibidas com opacidade reduzida e não são clicáveis
+- **Hierarquia de bloqueios**: Bloqueios de dia completo (dia_completo = true) são visualmente distintos com ícone de cadeado e fundo vermelho; bloqueios parciais aparecem em vermelho claro; bloqueios semanais em cinza
+- A propriedade specificBlocks foi projetada para trabalhar diretamente com resultados de consultas Supabase da tabela "bloqueios_profissional"
+- O campo `dia_completo` determina se um bloqueio específico aparece como bloqueado completamente (com ícone) ou bloqueio parcial
+- Todas as entradas de data devem estar em formato ISO (YYYY-MM-DD) para consistência
+- Campos de horário (horario_inicio, horario_fim) em bloqueios específicos são armazenados mas não utilizados atualmente para exibição visual - estão disponíveis no payload do evento de clique para lógica de workflow
+- O calendário destaca automaticamente a data de hoje com uma borda distintiva
+- Botões de navegação e seletores são desabilitados no modo de edição para prevenir interferência
+- Todas as interações são desabilitadas quando isEditing é true para garantir comportamento adequado do editor
+- O componente é totalmente responsivo e se adapta à largura do container
+- A legenda pode ser ocultada definindo showLegend como false
+- Todos os rótulos da legenda são customizáveis para suporte multi-idioma
+- Customização de cores permite combinar com qualquer sistema de design ou diretrizes de marca
+- O ícone de bloqueio pode ser alterado para qualquer ícone do sistema (lock, ban, x-circle, etc.)
+- **Interface 100% em português brasileiro** com labels, meses e dias da semana traduzidos por padrão

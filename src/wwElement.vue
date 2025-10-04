@@ -4,7 +4,7 @@
       <button
         class="nav-button"
         @click="previousMonth"
-        :disabled="isEditing"
+        :disabled="isEditing || isPreviousMonthDisabled"
         :style="buttonStyles"
       >
         <span v-html="prevIconHTML"></span>
@@ -155,13 +155,20 @@ export default {
 
     const yearRange = computed(() => {
       const currentYear = new Date().getFullYear();
-      const startYear = props.content?.startYear || currentYear - 10;
+      const startYear = props.content?.startYear || currentYear;
       const endYear = props.content?.endYear || currentYear + 10;
       const years = [];
       for (let year = startYear; year <= endYear; year++) {
         years.push(year);
       }
       return years;
+    });
+
+    const isPreviousMonthDisabled = computed(() => {
+      const today = new Date();
+      const current = currentDate.value;
+      return current.getFullYear() <= today.getFullYear() &&
+             current.getMonth() <= today.getMonth();
     });
     
     const { value: selectedDate, setValue: setSelectedDate } = wwLib.wwVariable.useComponentVariable({
@@ -238,6 +245,15 @@ export default {
       if (isEditing.value) return;
       const newDate = new Date(currentDate.value);
       newDate.setMonth(selectedMonth.value);
+
+      const today = new Date();
+      // Não permitir selecionar meses anteriores ao atual
+      if (newDate.getFullYear() < today.getFullYear() ||
+          (newDate.getFullYear() === today.getFullYear() && newDate.getMonth() < today.getMonth())) {
+        selectedMonth.value = currentDate.value.getMonth();
+        return;
+      }
+
       currentDate.value = newDate;
       updateCalendar('selector');
     };
@@ -246,13 +262,32 @@ export default {
       if (isEditing.value) return;
       const newDate = new Date(currentDate.value);
       newDate.setFullYear(selectedYear.value);
+
+      const today = new Date();
+      // Não permitir selecionar anos anteriores ao atual
+      if (newDate.getFullYear() < today.getFullYear() ||
+          (newDate.getFullYear() === today.getFullYear() && newDate.getMonth() < today.getMonth())) {
+        selectedYear.value = currentDate.value.getFullYear();
+        selectedMonth.value = currentDate.value.getMonth();
+        return;
+      }
+
       currentDate.value = newDate;
       updateCalendar('selector');
     };
 
     const previousMonth = () => {
       if (isEditing.value) return;
-      currentDate.value = navigateMonth(currentDate.value, 'prev');
+      const newDate = navigateMonth(currentDate.value, 'prev');
+      const today = new Date();
+
+      // Não permitir navegar para meses anteriores ao atual
+      if (newDate.getFullYear() < today.getFullYear() ||
+          (newDate.getFullYear() === today.getFullYear() && newDate.getMonth() < today.getMonth())) {
+        return;
+      }
+
+      currentDate.value = newDate;
       updateCalendar('previous');
     };
 
@@ -347,6 +382,7 @@ export default {
       yearRange,
       selectedMonth,
       selectedYear,
+      isPreviousMonthDisabled,
       getBlockStatus,
       isInCurrentMonth,
       handleDayClick,
@@ -388,67 +424,89 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 32px;
+  padding-top: 8px;
+  gap: 16px;
 
   .month-year-selectors {
     display: flex;
-    gap: 8px;
+    gap: 12px;
     align-items: center;
+    flex: 1;
+    justify-content: center;
 
     select {
-      background: white;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      padding: 8px 12px;
+      background: linear-gradient(to bottom, #ffffff, #f9fafb);
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 12px 16px;
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       outline: none;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 
       &:hover:not(:disabled) {
         border-color: #9ca3af;
+        background: #ffffff;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        transform: translateY(-1px);
       }
 
       &:focus {
         border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        background: #ffffff;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+        transform: translateY(-1px);
       }
 
       &:disabled {
         opacity: 0.5;
         cursor: not-allowed;
         background-color: #f3f4f6;
+        transform: none;
       }
     }
 
     .month-selector {
-      min-width: 130px;
+      min-width: 140px;
     }
 
     .year-selector {
-      min-width: 90px;
+      min-width: 95px;
     }
   }
 
   .nav-button {
-    background: none;
-    border: none;
+    background: linear-gradient(to bottom, #ffffff, #f9fafb);
+    border: 2px solid #e5e7eb;
     cursor: pointer;
-    padding: 8px;
-    border-radius: 4px;
+    padding: 10px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 
     &:hover:not(:disabled) {
-      background-color: rgba(0, 0, 0, 0.05);
+      border-color: #9ca3af;
+      background: #ffffff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
 
     &:disabled {
-      opacity: 0.5;
+      opacity: 0.4;
       cursor: not-allowed;
+      transform: none;
+      background: #f9fafb;
     }
 
     :deep(svg) {

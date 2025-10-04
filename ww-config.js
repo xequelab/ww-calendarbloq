@@ -156,7 +156,7 @@ export default {
       type: 'Array',
       section: 'settings',
       bindable: true,
-      defaultValue: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+      defaultValue: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
       options: {
         expandable: true,
         getItemLabel(_, index) {
@@ -226,10 +226,10 @@ export default {
       /* wwEditor:start */
       bindingValidation: {
         type: 'number',
-        tooltip: 'Starting year for the year selector. Leave empty to default to current year - 10'
+        tooltip: 'Starting year for the year selector. Leave empty to default to current year (prevents past dates)'
       },
       propertyHelp: {
-        tooltip: 'First year available in the year selector dropdown. Defaults to 10 years before current year if not set'
+        tooltip: 'First year available in the year selector dropdown. Defaults to current year if not set (no past years allowed)'
       }
       /* wwEditor:end */
     },

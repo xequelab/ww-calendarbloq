@@ -13,14 +13,16 @@ A specialized calendar component designed for appointment and booking systems. I
 - Clean monthly calendar view with intuitive navigation
 - Month and year dropdown selectors for quick date navigation
 - Arrow buttons for previous/next month navigation
-- Three-tier blocking system: available days, recurring weekday blocks, and specific date blocks
-- Visual distinction through color coding (green for available, gray for weekday blocks, red for specific blocks)
+- Four-tier blocking system: available days, recurring weekday blocks, partial date blocks, and full-day blocks
+- Visual distinction through color coding (green for available, gray for weekday blocks, light red for partial blocks, dark red for full blocks)
+- Full-day blocked dates display with lock icon and distinct red background
+- Interactive legend showing all availability states with color indicators
 - Current day highlighting with customizable border
 - Hover effects on clickable dates
 - Responsive grid layout that adapts to container size
 - Built with date-fns for reliable date manipulation
-- Fully customizable colors and styling
-- Bilingual labels (English/Portuguese)
+- Fully customizable colors, icons, and labels
+- Bilingual support (English/Portuguese)
 
 ***Properties:***
 - blockedWeekdays: number[] - Array of weekday numbers (0-6, where 0=Sunday) to block across all weeks. Example: [0, 6] blocks all Sundays and Saturdays
@@ -31,7 +33,11 @@ A specialized calendar component designed for appointment and booking systems. I
 - endYear: number|null - Last year available in year selector. Defaults to current year + 10 if not set
 - availableColor: string - Background color for available/bookable days (default: '#d4edda' - light green)
 - weekdayBlockColor: string - Background color for recurring weekday blocks (default: '#e9ecef' - light gray)
-- specificBlockColor: string - Background color for specific date blocks (default: '#f8d7da' - light red)
+- specificBlockColor: string - Background color for partial date blocks (default: '#f8d7da' - light red)
+- fullDayBlockColor: string - Background color for completely blocked days with lock icon (default: '#dc3545' - red)
+- blockIcon: string - System icon name for full-day blocked dates (default: 'lock')
+- showLegend: boolean - Display legend explaining color codes and block types (default: true)
+- legendLabels: object - Customizable legend text labels: { available: 'Disponível', weekdayBlock: 'Bloqueio semanal', partialBlock: 'Bloqueio parcial', fullBlock: 'Bloqueado' }
 - currentDayBorderColor: string - Border color for today's date (default: '#007bff' - blue)
 - backgroundColor: string - Calendar container background color
 - headerTextColor: string - Color for month/year header text and selectors
@@ -63,13 +69,16 @@ A specialized calendar component designed for appointment and booking systems. I
 - Month and year selectors are synchronized with arrow navigation
 - The year range defaults to ±10 years from current year but can be customized with startYear and endYear properties
 - Dates outside the current month are displayed with reduced opacity and are not clickable
-- Block priority: specific blocks override weekday blocks when both apply to same date
+- **Block hierarchy**: Full-day blocks (dia_completo = true) are visually distinct with lock icon and red background; partial blocks show in light red; weekday blocks in gray
 - The specificBlocks property is designed to work directly with Supabase query results from a "bloqueios_profissional" table
+- The `dia_completo` field determines if a specific block shows as full-day blocked (with icon) or partial block
 - All date inputs should be in ISO format (YYYY-MM-DD) for consistency
 - Time fields (horario_inicio, horario_fim) in specific blocks are stored but not currently used for visual display - they're available in the click event payload for workflow logic
 - The calendar automatically highlights today's date with a distinctive border
 - Navigation buttons and selectors are disabled in editor mode to prevent interference with editing
 - All interactions are disabled when isEditing is true to ensure proper editor behavior
 - The component is fully responsive and will adapt to its container width
+- The legend can be hidden by setting showLegend to false
+- All legend labels are customizable for multi-language support
 - Color customization allows matching any design system or brand guidelines
-- Month names are customizable and default to Portuguese, making it easy to support any language
+- The block icon can be changed to any system icon (lock, ban, x-circle, etc.)

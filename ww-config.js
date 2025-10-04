@@ -390,27 +390,135 @@ export default {
       /* wwEditor:end */
     },
     specificBlockColor: {
-      label: { 
+      label: {
         en: 'Specific block color',
         pt: 'Cor dos bloqueios específicos'
       },
       type: 'Color',
       section: 'style',
-bindable: true,
-defaultValue: '#f8d7da',
-options: {
-nullable: false
-},
-/* wwEditor:start */
-bindingValidation: {
-type: 'string',
-tooltip: 'Bind to a color string for specific date blocks from database. Recommended: light red shades'
-},
-propertyHelp: {
-tooltip: 'Background color for days blocked by specific date ranges from your database'
-}
-/* wwEditor:end */
-},
+      bindable: true,
+      defaultValue: '#f8d7da',
+      options: {
+        nullable: false
+      },
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'string',
+        tooltip: 'Bind to a color string for specific date blocks from database. Recommended: light red shades'
+      },
+      propertyHelp: {
+        tooltip: 'Background color for days blocked by specific date ranges from your database (partial blocks)'
+      }
+      /* wwEditor:end */
+    },
+    fullDayBlockColor: {
+      label: {
+        en: 'Full day block color',
+        pt: 'Cor do bloqueio completo'
+      },
+      type: 'Color',
+      section: 'style',
+      bindable: true,
+      defaultValue: '#dc3545',
+      options: {
+        nullable: false
+      },
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'string',
+        tooltip: 'Bind to a color string for full day blocks. Recommended: red shades'
+      },
+      propertyHelp: {
+        tooltip: 'Background color for days that are completely blocked (dia_completo = true). Shows with lock icon.'
+      }
+      /* wwEditor:end */
+    },
+    blockIcon: {
+      label: {
+        en: 'Block icon',
+        pt: 'Ícone de bloqueio'
+      },
+      type: 'SystemIcon',
+      section: 'style',
+      bindable: true,
+      defaultValue: 'lock',
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'string',
+        tooltip: 'Bind to a system icon name for full day blocked dates'
+      },
+      propertyHelp: {
+        tooltip: 'Icon displayed on days that are completely blocked'
+      }
+      /* wwEditor:end */
+    },
+    showLegend: {
+      label: {
+        en: 'Show legend',
+        pt: 'Mostrar legenda'
+      },
+      type: 'OnOff',
+      section: 'settings',
+      bindable: true,
+      defaultValue: true,
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'boolean',
+        tooltip: 'Set to true to show the calendar legend, false to hide it'
+      },
+      propertyHelp: {
+        tooltip: 'Display a legend explaining the color codes and blocked status indicators'
+      }
+      /* wwEditor:end */
+    },
+    legendLabels: {
+      label: {
+        en: 'Legend labels',
+        pt: 'Rótulos da legenda'
+      },
+      type: 'Object',
+      section: 'settings',
+      bindable: true,
+      defaultValue: {
+        available: 'Disponível',
+        weekdayBlock: 'Bloqueio semanal',
+        partialBlock: 'Bloqueio parcial',
+        fullBlock: 'Bloqueado'
+      },
+      options: {
+        item: {
+          available: {
+            type: 'Text',
+            label: { en: 'Available label', pt: 'Rótulo disponível' },
+            defaultValue: 'Disponível'
+          },
+          weekdayBlock: {
+            type: 'Text',
+            label: { en: 'Weekday block label', pt: 'Rótulo bloqueio semanal' },
+            defaultValue: 'Bloqueio semanal'
+          },
+          partialBlock: {
+            type: 'Text',
+            label: { en: 'Partial block label', pt: 'Rótulo bloqueio parcial' },
+            defaultValue: 'Bloqueio parcial'
+          },
+          fullBlock: {
+            type: 'Text',
+            label: { en: 'Full block label', pt: 'Rótulo bloqueado' },
+            defaultValue: 'Bloqueado'
+          }
+        }
+      },
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'object',
+        tooltip: 'Object with legend label texts: { available, weekdayBlock, partialBlock, fullBlock }'
+      },
+      propertyHelp: {
+        tooltip: 'Customize the text labels shown in the calendar legend'
+      }
+      /* wwEditor:end */
+    },
 currentDayBorderColor: {
 label: { 
 en: 'Current day border',

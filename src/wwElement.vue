@@ -67,11 +67,34 @@
         :available-color="availableColor"
         :weekday-block-color="weekdayBlockColor"
         :specific-block-color="specificBlockColor"
+        :full-day-block-color="fullDayBlockColor"
         :current-day-border-color="currentDayBorderColor"
         :text-color="dayTextColor"
+        :block-icon="blockIcon"
         :is-editing="isEditing"
         @click="handleDayClick"
       />
+    </div>
+
+    <div v-if="showLegend" class="calendar-legend">
+      <div class="legend-item">
+        <span class="legend-color" :style="{ backgroundColor: availableColor }"></span>
+        <span class="legend-label">{{ legendLabels.available }}</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-color" :style="{ backgroundColor: weekdayBlockColor }"></span>
+        <span class="legend-label">{{ legendLabels.weekdayBlock }}</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-color" :style="{ backgroundColor: specificBlockColor }"></span>
+        <span class="legend-label">{{ legendLabels.partialBlock }}</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-color full-block" :style="{ backgroundColor: fullDayBlockColor }">
+          <span class="legend-icon" v-html="blockIconHTML"></span>
+        </span>
+        <span class="legend-label">{{ legendLabels.fullBlock }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -281,7 +304,24 @@ export default {
     const availableColor = computed(() => props.content?.availableColor || '#d4edda');
     const weekdayBlockColor = computed(() => props.content?.weekdayBlockColor || '#e9ecef');
     const specificBlockColor = computed(() => props.content?.specificBlockColor || '#f8d7da');
+    const fullDayBlockColor = computed(() => props.content?.fullDayBlockColor || '#dc3545');
     const currentDayBorderColor = computed(() => props.content?.currentDayBorderColor || '#007bff');
+
+    const blockIcon = computed(() => props.content?.blockIcon || 'lock');
+    const showLegend = computed(() => props.content?.showLegend !== false);
+
+    const legendLabels = computed(() => props.content?.legendLabels || {
+      available: 'Disponível',
+      weekdayBlock: 'Bloqueio semanal',
+      partialBlock: 'Bloqueio parcial',
+      fullBlock: 'Bloqueado'
+    });
+
+    const blockIconHTML = ref('');
+
+    watch(blockIcon, async () => {
+      blockIconHTML.value = await getIcon(blockIcon.value);
+    }, { immediate: true });
     
     const prevIcon = computed(() => props.content?.prevIcon || 'chevron-left');
     const nextIcon = computed(() => props.content?.nextIcon || 'chevron-right');
@@ -324,7 +364,12 @@ export default {
       availableColor,
       weekdayBlockColor,
       specificBlockColor,
+      fullDayBlockColor,
       currentDayBorderColor,
+      blockIcon,
+      showLegend,
+      legendLabels,
+      blockIconHTML,
       prevIconHTML,
       nextIconHTML
     };
@@ -432,5 +477,51 @@ export default {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 4px;
+}
+
+.calendar-legend {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+
+    .legend-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 3px;
+      border: 1px solid #dee2e6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &.full-block {
+        .legend-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          filter: brightness(0) invert(1);
+
+          :deep(svg) {
+            width: 12px;
+            height: 12px;
+          }
+        }
+      }
+    }
+
+    .legend-label {
+      color: #6c757d;
+      font-weight: 500;
+    }
+  }
 }
 </style>

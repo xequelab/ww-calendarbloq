@@ -257,8 +257,38 @@ export default {
       }
       /* wwEditor:end */
     },
+    showTimeLabel: {
+      label: {
+        en: 'Show time label',
+        pt: 'Exibir label de horário'
+      },
+      type: 'OnOff',
+      section: 'settings',
+      bindable: true,
+      defaultValue: false,
+      /* wwEditor:start */
+      propertyHelp: {
+        tooltip: 'Show time range from block data inside calendar days (e.g., "09:00-17:00")'
+      }
+      /* wwEditor:end */
+    },
+    showReasonLabel: {
+      label: {
+        en: 'Show reason label',
+        pt: 'Exibir label de motivo'
+      },
+      type: 'OnOff',
+      section: 'settings',
+      bindable: true,
+      defaultValue: false,
+      /* wwEditor:start */
+      propertyHelp: {
+        tooltip: 'Show reason/motive from block data inside calendar days'
+      }
+      /* wwEditor:end */
+    },
     backgroundColor: {
-      label: { 
+      label: {
         en: 'Background color',
         pt: 'Cor de fundo'
       },
@@ -435,8 +465,8 @@ export default {
     },
     blockIcon: {
       label: {
-        en: 'Block icon',
-        pt: 'Ícone de bloqueio'
+        en: 'Full block icon',
+        pt: 'Ícone bloqueio completo'
       },
       type: 'SystemIcon',
       section: 'style',
@@ -448,7 +478,64 @@ export default {
         tooltip: 'Bind to a system icon name for full day blocked dates'
       },
       propertyHelp: {
-        tooltip: 'Icon displayed on days that are completely blocked'
+        tooltip: 'Icon displayed on days that are completely blocked (dia_inteiro = true)'
+      }
+      /* wwEditor:end */
+    },
+    availableIcon: {
+      label: {
+        en: 'Available day icon',
+        pt: 'Ícone dia disponível'
+      },
+      type: 'SystemIcon',
+      section: 'style',
+      bindable: true,
+      defaultValue: '',
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'string',
+        tooltip: 'Optional icon for available/bookable days'
+      },
+      propertyHelp: {
+        tooltip: 'Optional icon displayed on available days (leave empty for no icon)'
+      }
+      /* wwEditor:end */
+    },
+    weekdayBlockIcon: {
+      label: {
+        en: 'Weekday block icon',
+        pt: 'Ícone bloqueio semanal'
+      },
+      type: 'SystemIcon',
+      section: 'style',
+      bindable: true,
+      defaultValue: '',
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'string',
+        tooltip: 'Optional icon for weekday-blocked days (e.g., weekends)'
+      },
+      propertyHelp: {
+        tooltip: 'Optional icon displayed on days blocked by weekday rules (leave empty for no icon)'
+      }
+      /* wwEditor:end */
+    },
+    partialBlockIcon: {
+      label: {
+        en: 'Partial block icon',
+        pt: 'Ícone bloqueio parcial'
+      },
+      type: 'SystemIcon',
+      section: 'style',
+      bindable: true,
+      defaultValue: '',
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'string',
+        tooltip: 'Optional icon for partially blocked days (dia_inteiro = false)'
+      },
+      propertyHelp: {
+        tooltip: 'Optional icon displayed on partially blocked days (leave empty for no icon)'
       }
       /* wwEditor:end */
     },
@@ -674,7 +761,7 @@ tooltip: 'Icon displayed in the previous month navigation button'
 /* wwEditor:end */
 },
 nextIcon: {
-label: { 
+label: {
 en: 'Next month icon',
 pt: 'Ícone próximo mês'
 },
@@ -689,6 +776,66 @@ tooltip: 'Bind to a system icon name for the next month button'
 },
 propertyHelp: {
 tooltip: 'Icon displayed in the next month navigation button'
+}
+/* wwEditor:end */
+},
+headerGap: {
+label: {
+en: 'Header gap',
+pt: 'Espaçamento do header'
+},
+type: 'Length',
+section: 'style',
+bindable: true,
+defaultValue: '8px',
+/* wwEditor:start */
+propertyHelp: {
+tooltip: 'Space between header elements (dropdowns and buttons)'
+}
+/* wwEditor:end */
+},
+headerFontSize: {
+label: {
+en: 'Header font size',
+pt: 'Tamanho da fonte do header'
+},
+type: 'Length',
+section: 'style',
+bindable: true,
+defaultValue: '15px',
+/* wwEditor:start */
+propertyHelp: {
+tooltip: 'Font size for month and year dropdowns'
+}
+/* wwEditor:end */
+},
+headerBorderRadius: {
+label: {
+en: 'Header border radius',
+pt: 'Raio da borda do header'
+},
+type: 'Length',
+section: 'style',
+bindable: true,
+defaultValue: '6px',
+/* wwEditor:start */
+propertyHelp: {
+tooltip: 'Border radius for dropdowns and buttons in header'
+}
+/* wwEditor:end */
+},
+headerBorderColor: {
+label: {
+en: 'Header border color',
+pt: 'Cor da borda do header'
+},
+type: 'Color',
+section: 'style',
+bindable: true,
+defaultValue: '#e0e0e0',
+/* wwEditor:start */
+propertyHelp: {
+tooltip: 'Border color for dropdowns and buttons in header'
 }
 /* wwEditor:end */
 }

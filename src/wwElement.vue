@@ -1,16 +1,16 @@
 <template>
   <div class="appointment-calendar" :style="containerStyles">
     <div class="calendar-header">
-      <button
-        class="nav-button"
-        @click="previousMonth"
-        :disabled="isEditing || isPreviousMonthDisabled"
-        :style="buttonStyles"
-      >
-        <span v-html="prevIconHTML"></span>
-      </button>
+      <div class="header-content">
+        <button
+          class="nav-button prev-button"
+          @click="previousMonth"
+          :disabled="isEditing || isPreviousMonthDisabled"
+          :style="buttonStyles"
+        >
+          <span v-html="prevIconHTML"></span>
+        </button>
 
-      <div class="month-year-selectors">
         <select
           class="month-selector"
           v-model="selectedMonth"
@@ -18,10 +18,24 @@
           :disabled="isEditing"
           :style="{ color: headerTextColor }"
         >
-          <option v-for="(month, index) in monthNames" :key="index" :value="index">
+          <option
+            v-for="(month, index) in monthNames"
+            :key="index"
+            :value="index"
+            :disabled="isMonthDisabled(index)"
+          >
             {{ month }}
           </option>
         </select>
+
+        <button
+          class="nav-button next-button"
+          @click="nextMonth"
+          :disabled="isEditing"
+          :style="buttonStyles"
+        >
+          <span v-html="nextIconHTML"></span>
+        </button>
 
         <select
           class="year-selector"
@@ -35,15 +49,6 @@
           </option>
         </select>
       </div>
-
-      <button
-        class="nav-button"
-        @click="nextMonth"
-        :disabled="isEditing"
-        :style="buttonStyles"
-      >
-        <span v-html="nextIconHTML"></span>
-      </button>
     </div>
     
     <div class="calendar-weekdays">
@@ -71,6 +76,11 @@
         :current-day-border-color="currentDayBorderColor"
         :text-color="dayTextColor"
         :block-icon="blockIcon"
+        :available-icon="availableIcon"
+        :weekday-block-icon="weekdayBlockIcon"
+        :partial-block-icon="partialBlockIcon"
+        :show-time-label="showTimeLabel"
+        :show-reason-label="showReasonLabel"
         :is-editing="isEditing"
         @click="handleDayClick"
       />
@@ -170,6 +180,23 @@ export default {
       return current.getFullYear() <= today.getFullYear() &&
              current.getMonth() <= today.getMonth();
     });
+
+    const isMonthDisabled = (monthIndex) => {
+      const today = new Date();
+      const currentYear = selectedYear.value;
+
+      // Se for ano passado, desabilitar todos os meses
+      if (currentYear < today.getFullYear()) {
+        return true;
+      }
+
+      // Se for o ano atual, desabilitar meses anteriores ao atual
+      if (currentYear === today.getFullYear() && monthIndex < today.getMonth()) {
+        return true;
+      }
+
+      return false;
+    };
     
     const { value: selectedDate, setValue: setSelectedDate } = wwLib.wwVariable.useComponentVariable({
       uid: props.uid,
@@ -444,7 +471,17 @@ export default {
     const currentDayBorderColor = computed(() => props.content?.currentDayBorderColor || '#007bff');
 
     const blockIcon = computed(() => props.content?.blockIcon || 'lock');
+    const availableIcon = computed(() => props.content?.availableIcon || '');
+    const weekdayBlockIcon = computed(() => props.content?.weekdayBlockIcon || '');
+    const partialBlockIcon = computed(() => props.content?.partialBlockIcon || '');
     const showLegend = computed(() => props.content?.showLegend !== false);
+    const showTimeLabel = computed(() => props.content?.showTimeLabel || false);
+    const showReasonLabel = computed(() => props.content?.showReasonLabel || false);
+
+    const headerGap = computed(() => props.content?.headerGap || '8px');
+    const headerFontSize = computed(() => props.content?.headerFontSize || '15px');
+    const headerBorderRadius = computed(() => props.content?.headerBorderRadius || '6px');
+    const headerBorderColor = computed(() => props.content?.headerBorderColor || '#e0e0e0');
 
     const legendLabels = computed(() => props.content?.legendLabels || {
       available: 'Disponível',
@@ -484,6 +521,7 @@ export default {
       selectedMonth,
       selectedYear,
       isPreviousMonthDisabled,
+      isMonthDisabled,
       getBlockStatus,
       isInCurrentMonth,
       handleDayClick,
@@ -504,7 +542,12 @@ export default {
       fullDayBlockColor,
       currentDayBorderColor,
       blockIcon,
+      availableIcon,
+      weekdayBlockIcon,
+      partialBlockIcon,
       showLegend,
+      showTimeLabel,
+      showReasonLabel,
       legendLabels,
       blockIconHTML,
       prevIconHTML,
@@ -523,96 +566,70 @@ export default {
 
 .calendar-header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 32px;
+  justify-content: center;
+  margin-bottom: 24px;
   padding-top: 8px;
-  gap: 16px;
 
-  .month-year-selectors {
+  .header-content {
     display: flex;
-    gap: 12px;
     align-items: center;
-    flex: 1;
-    justify-content: center;
+    gap: v-bind(headerGap);
 
     select {
-      background: linear-gradient(to bottom, #ffffff, #f9fafb);
-      border: 2px solid #e5e7eb;
-      border-radius: 10px;
-      padding: 12px 16px;
-      font-size: 16px;
-      font-weight: 600;
+      background: #ffffff;
+      border: 1px solid v-bind(headerBorderColor);
+      border-radius: v-bind(headerBorderRadius);
+      padding: 8px 12px;
+      font-size: v-bind(headerFontSize);
+      font-weight: 500;
       cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       outline: none;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-
-      &:hover:not(:disabled) {
-        border-color: #9ca3af;
-        background: #ffffff;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-        transform: translateY(-1px);
-      }
+      transition: border-color 0.2s ease;
 
       &:focus {
-        border-color: #3b82f6;
-        background: #ffffff;
-        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
-        transform: translateY(-1px);
+        border-color: v-bind(currentDayBorderColor);
       }
 
       &:disabled {
         opacity: 0.5;
         cursor: not-allowed;
-        background-color: #f3f4f6;
-        transform: none;
+        background-color: #f5f5f5;
       }
     }
 
     .month-selector {
-      min-width: 140px;
+      min-width: 120px;
     }
 
     .year-selector {
-      min-width: 95px;
+      min-width: 80px;
     }
   }
 
   .nav-button {
-    background: linear-gradient(to bottom, #ffffff, #f9fafb);
-    border: 2px solid #e5e7eb;
+    background: transparent;
+    border: 1px solid v-bind(headerBorderColor);
     cursor: pointer;
-    padding: 10px;
-    border-radius: 10px;
+    padding: 6px;
+    border-radius: v-bind(headerBorderRadius);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.2s ease;
 
-    &:hover:not(:disabled) {
-      border-color: #9ca3af;
-      background: #ffffff;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-      transform: translateY(-1px);
-    }
-
-    &:active:not(:disabled) {
-      transform: translateY(0);
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    &:focus {
+      border-color: v-bind(currentDayBorderColor);
+      outline: none;
     }
 
     &:disabled {
-      opacity: 0.4;
+      opacity: 0.3;
       cursor: not-allowed;
-      transform: none;
-      background: #f9fafb;
     }
 
     :deep(svg) {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
     }
   }
 }

@@ -5,8 +5,10 @@
     :style="dayStyles"
     @click="handleClick"
   >
-    <span v-if="isFullDayBlocked" class="lock-icon" v-html="lockIconHTML"></span>
+    <span v-if="currentIconHTML" class="day-icon" v-html="currentIconHTML"></span>
     <span class="day-number">{{ dayNumber }}</span>
+    <span v-if="showTimeLabel && timeText" class="time-label">{{ timeText }}</span>
+    <span v-if="showReasonLabel && reasonText" class="reason-label">{{ reasonText }}</span>
   </div>
 </template>
 
@@ -60,6 +62,26 @@ export default {
     blockIcon: {
       type: String,
       default: 'lock'
+    },
+    availableIcon: {
+      type: String,
+      default: ''
+    },
+    weekdayBlockIcon: {
+      type: String,
+      default: ''
+    },
+    partialBlockIcon: {
+      type: String,
+      default: ''
+    },
+    showTimeLabel: {
+      type: Boolean,
+      default: false
+    },
+    showReasonLabel: {
+      type: Boolean,
+      default: false
     }
   },
   emits: ['click'],
@@ -81,16 +103,57 @@ export default {
              (props.blockStatus?.block?.dia_completo === true || props.blockStatus?.block?.dia_inteiro === true);
     });
 
-    const lockIconHTML = ref('');
+    const timeText = computed(() => {
+      if (props.blockStatus?.blocked && props.blockStatus?.block) {
+        const block = props.blockStatus.block;
+        const inicio = block.horario_inicio || (block.data_inicio ? block.data_inicio.split('T')[1]?.substring(0, 5) : null);
+        const fim = block.horario_fim || (block.data_fim ? block.data_fim.split('T')[1]?.substring(0, 5) : null);
 
-    const loadIcon = async () => {
+        if (inicio && fim) {
+          return `${inicio}-${fim}`;
+        } else if (inicio) {
+          return inicio;
+        }
+      }
+      return null;
+    });
+
+    const reasonText = computed(() => {
+      if (props.blockStatus?.blocked && props.blockStatus?.block) {
+        return props.blockStatus.block.motivo || null;
+      }
+      return null;
+    });
+
+    const fullBlockIconHTML = ref('');
+    const availableIconHTML = ref('');
+    const weekdayBlockIconHTML = ref('');
+    const partialBlockIconHTML = ref('');
+
+    const loadIcons = async () => {
       if (typeof wwLib !== 'undefined' && wwLib.useIcons) {
         const { getIcon } = wwLib.useIcons();
-        lockIconHTML.value = await getIcon(props.blockIcon);
+        if (props.blockIcon) fullBlockIconHTML.value = await getIcon(props.blockIcon);
+        if (props.availableIcon) availableIconHTML.value = await getIcon(props.availableIcon);
+        if (props.weekdayBlockIcon) weekdayBlockIconHTML.value = await getIcon(props.weekdayBlockIcon);
+        if (props.partialBlockIcon) partialBlockIconHTML.value = await getIcon(props.partialBlockIcon);
       }
     };
 
-    watch(() => props.blockIcon, loadIcon, { immediate: true });
+    watch(() => [props.blockIcon, props.availableIcon, props.weekdayBlockIcon, props.partialBlockIcon], loadIcons, { immediate: true });
+
+    const currentIconHTML = computed(() => {
+      if (isFullDayBlocked.value && fullBlockIconHTML.value) {
+        return fullBlockIconHTML.value;
+      } else if (props.blockStatus?.type === 'weekday' && weekdayBlockIconHTML.value) {
+        return weekdayBlockIconHTML.value;
+      } else if (props.blockStatus?.type === 'specific' && !isFullDayBlocked.value && partialBlockIconHTML.value) {
+        return partialBlockIconHTML.value;
+      } else if (!props.blockStatus?.blocked && availableIconHTML.value) {
+        return availableIconHTML.value;
+      }
+      return null;
+    });
     
     const dayClasses = computed(() => ({
       'is-current-month': props.isCurrentMonth,
@@ -140,7 +203,9 @@ export default {
       isCurrentDay,
       blockInfo,
       isFullDayBlocked,
-      lockIconHTML,
+      timeText,
+      reasonText,
+      currentIconHTML,
       dayClasses,
       dayStyles,
       handleClick
@@ -183,13 +248,13 @@ export default {
   }
 
   &.is-full-day-blocked {
-    .lock-icon {
+    .day-icon {
       opacity: 1;
       filter: brightness(0) invert(1);
     }
   }
 
-  .lock-icon {
+  .day-icon {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -209,6 +274,27 @@ export default {
 
   &.is-today .day-number {
     font-weight: 700;
+  }
+
+  .time-label,
+  .reason-label {
+    font-size: 10px;
+    z-index: 1;
+    opacity: 0.9;
+    text-align: center;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .time-label {
+    font-weight: 600;
+  }
+
+  .reason-label {
+    font-weight: 400;
+    font-style: italic;
   }
 }
 </style>

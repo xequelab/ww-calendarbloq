@@ -138,12 +138,22 @@ export default {
             if (isNaN(utcDate.getTime())) return null;
 
             // Converter usando Intl.DateTimeFormat com timezone configurado
+            const timezone = props.timezone || 'America/Sao_Paulo';
+
+            console.log('🌍 Timezone conversion:', {
+              input: dateTimeString,
+              timezone: timezone,
+              utcDate: utcDate.toISOString()
+            });
+
             const timeFormatted = new Intl.DateTimeFormat('en-US', {
               hour: '2-digit',
               minute: '2-digit',
               hour12: false,
-              timeZone: props.timezone
+              timeZone: timezone
             }).format(utcDate);
+
+            console.log('⏰ Result:', timeFormatted);
 
             return timeFormatted;
           } catch (e) {

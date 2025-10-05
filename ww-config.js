@@ -884,6 +884,118 @@ propertyHelp: {
 tooltip: 'Border color for dropdowns and buttons in header'
 }
 /* wwEditor:end */
+},
+weekdayFontSize: {
+label: {
+en: 'Weekday font size',
+pt: 'Tamanho fonte dias da semana'
+},
+type: 'Length',
+section: 'style',
+bindable: true,
+defaultValue: '12px',
+/* wwEditor:start */
+propertyHelp: {
+tooltip: 'Font size for weekday labels (Dom, Seg, Ter...)'
+}
+/* wwEditor:end */
+},
+dayNumberFontSize: {
+label: {
+en: 'Day number font size',
+pt: 'Tamanho fonte número do dia'
+},
+type: 'Length',
+section: 'style',
+bindable: true,
+defaultValue: '14px',
+/* wwEditor:start */
+propertyHelp: {
+tooltip: 'Font size for day numbers in calendar grid'
+}
+/* wwEditor:end */
+},
+timeLabelFontSize: {
+label: {
+en: 'Time label font size',
+pt: 'Tamanho fonte label horário'
+},
+type: 'Length',
+section: 'style',
+bindable: true,
+defaultValue: '10px',
+/* wwEditor:start */
+propertyHelp: {
+tooltip: 'Font size for time labels inside days'
+}
+/* wwEditor:end */
+},
+reasonLabelFontSize: {
+label: {
+en: 'Reason label font size',
+pt: 'Tamanho fonte label motivo'
+},
+type: 'Length',
+section: 'style',
+bindable: true,
+defaultValue: '10px',
+/* wwEditor:start */
+propertyHelp: {
+tooltip: 'Font size for reason labels inside days'
+}
+/* wwEditor:end */
+},
+legendFontSize: {
+label: {
+en: 'Legend font size',
+pt: 'Tamanho fonte legenda'
+},
+type: 'Length',
+section: 'style',
+bindable: true,
+defaultValue: '12px',
+/* wwEditor:start */
+propertyHelp: {
+tooltip: 'Font size for legend labels'
+}
+/* wwEditor:end */
+},
+fontFamily: {
+label: {
+en: 'Font family',
+pt: 'Família da fonte'
+},
+type: 'Text',
+section: 'style',
+bindable: true,
+defaultValue: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+/* wwEditor:start */
+propertyHelp: {
+tooltip: 'Font family for the entire calendar component'
+}
+/* wwEditor:end */
+},
+timezone: {
+label: {
+en: 'Timezone',
+pt: 'Fuso horário'
+},
+type: 'Text',
+section: 'settings',
+bindable: true,
+defaultValue: 'America/Sao_Paulo',
+options: {
+placeholder: 'e.g., America/Sao_Paulo'
+},
+/* wwEditor:start */
+bindingValidation: {
+type: 'string',
+tooltip: 'IANA timezone identifier. Examples: America/Sao_Paulo, America/New_York, Europe/London'
+},
+propertyHelp: {
+tooltip: 'Timezone for converting UTC times to local time. Uses IANA timezone database.'
+}
+/* wwEditor:end */
 }
 },
 actions: [

@@ -81,6 +81,9 @@
         :partial-block-icon="partialBlockIcon"
         :show-time-label="showTimeLabel"
         :show-reason-label="showReasonLabel"
+        :day-number-font-size="dayNumberFontSize"
+        :time-label-font-size="timeLabelFontSize"
+        :reason-label-font-size="reasonLabelFontSize"
         :is-editing="isEditing"
         @click="handleDayClick"
       />
@@ -494,6 +497,13 @@ export default {
     const headerFontSize = computed(() => props.content?.headerFontSize || '15px');
     const headerBorderRadius = computed(() => props.content?.headerBorderRadius || '6px');
     const headerBorderColor = computed(() => props.content?.headerBorderColor || '#e0e0e0');
+    const weekdayFontSize = computed(() => props.content?.weekdayFontSize || '12px');
+    const dayNumberFontSize = computed(() => props.content?.dayNumberFontSize || '14px');
+    const timeLabelFontSize = computed(() => props.content?.timeLabelFontSize || '10px');
+    const reasonLabelFontSize = computed(() => props.content?.reasonLabelFontSize || '10px');
+    const legendFontSize = computed(() => props.content?.legendFontSize || '12px');
+    const fontFamily = computed(() => props.content?.fontFamily || 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif');
+    const timezone = computed(() => props.content?.timezone || 'America/Sao_Paulo');
 
     const legendLabels = computed(() => props.content?.legendLabels || {
       available: 'Disponível',
@@ -594,7 +604,7 @@ export default {
 .appointment-calendar {
   width: 100%;
   max-width: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: v-bind(fontFamily);
 }
 
 .calendar-header {
@@ -675,7 +685,7 @@ export default {
   
   .weekday-label {
     text-align: center;
-    font-size: 12px;
+    font-size: v-bind(weekdayFontSize);
     font-weight: 600;
     text-transform: uppercase;
     padding: 8px 0;
@@ -701,7 +711,7 @@ export default {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 12px;
+    font-size: v-bind(legendFontSize);
 
     .legend-color {
       width: 20px;
@@ -712,17 +722,20 @@ export default {
       align-items: center;
       justify-content: center;
 
+      .legend-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        :deep(svg) {
+          width: 12px;
+          height: 12px;
+        }
+      }
+
       &.full-block {
         .legend-icon {
-          display: flex;
-          align-items: center;
-          justify-content: center;
           filter: brightness(0) invert(1);
-
-          :deep(svg) {
-            width: 12px;
-            height: 12px;
-          }
         }
       }
     }

@@ -82,6 +82,18 @@ export default {
     showReasonLabel: {
       type: Boolean,
       default: false
+    },
+    dayNumberFontSize: {
+      type: String,
+      default: '14px'
+    },
+    timeLabelFontSize: {
+      type: String,
+      default: '10px'
+    },
+    reasonLabelFontSize: {
+      type: String,
+      default: '10px'
     }
   },
   emits: ['click'],
@@ -267,7 +279,7 @@ export default {
   }
 
   .day-number {
-    font-size: 14px;
+    font-size: v-bind(dayNumberFontSize);
     font-weight: 500;
     z-index: 1;
   }
@@ -276,9 +288,8 @@ export default {
     font-weight: 700;
   }
 
-  .time-label,
-  .reason-label {
-    font-size: 10px;
+  .time-label {
+    font-size: v-bind(timeLabelFontSize);
     z-index: 1;
     opacity: 0.9;
     text-align: center;
@@ -286,13 +297,18 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-
-  .time-label {
     font-weight: 600;
   }
 
   .reason-label {
+    font-size: v-bind(reasonLabelFontSize);
+    z-index: 1;
+    opacity: 0.9;
+    text-align: center;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     font-weight: 400;
     font-style: italic;
   }

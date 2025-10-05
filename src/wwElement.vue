@@ -1,12 +1,12 @@
 <template>
   <div class="appointment-calendar" :style="containerStyles">
     <div class="calendar-header">
-      <div class="header-content">
+      <div class="header-content" :style="headerContentStyles">
         <button
           class="nav-button prev-button"
           @click="previousMonth"
           :disabled="isEditing || isPreviousMonthDisabled"
-          :style="buttonStyles"
+          :style="headerButtonStyles"
         >
           <span v-html="prevIconHTML"></span>
         </button>
@@ -16,7 +16,7 @@
           v-model="selectedMonth"
           @change="onMonthChange"
           :disabled="isEditing"
-          :style="{ color: headerTextColor }"
+          :style="headerSelectStyles"
         >
           <option
             v-for="(month, index) in monthNames"
@@ -32,7 +32,7 @@
           class="nav-button next-button"
           @click="nextMonth"
           :disabled="isEditing"
-          :style="buttonStyles"
+          :style="headerButtonStyles"
         >
           <span v-html="nextIconHTML"></span>
         </button>
@@ -42,7 +42,7 @@
           v-model="selectedYear"
           @change="onYearChange"
           :disabled="isEditing"
-          :style="{ color: headerTextColor }"
+          :style="headerSelectStyles"
         >
           <option v-for="year in yearRange" :key="year" :value="year">
             {{ year }}
@@ -88,20 +88,26 @@
 
     <div v-if="showLegend" class="calendar-legend">
       <div class="legend-item">
-        <span class="legend-color" :style="{ backgroundColor: availableColor }"></span>
+        <span class="legend-color" :style="{ backgroundColor: availableColor }">
+          <span v-if="availableIconHTML" class="legend-icon" v-html="availableIconHTML"></span>
+        </span>
         <span class="legend-label">{{ legendLabels.available }}</span>
       </div>
       <div class="legend-item">
-        <span class="legend-color" :style="{ backgroundColor: weekdayBlockColor }"></span>
+        <span class="legend-color" :style="{ backgroundColor: weekdayBlockColor }">
+          <span v-if="weekdayBlockIconHTML" class="legend-icon" v-html="weekdayBlockIconHTML"></span>
+        </span>
         <span class="legend-label">{{ legendLabels.weekdayBlock }}</span>
       </div>
       <div class="legend-item">
-        <span class="legend-color" :style="{ backgroundColor: specificBlockColor }"></span>
+        <span class="legend-color" :style="{ backgroundColor: specificBlockColor }">
+          <span v-if="partialBlockIconHTML" class="legend-icon" v-html="partialBlockIconHTML"></span>
+        </span>
         <span class="legend-label">{{ legendLabels.partialBlock }}</span>
       </div>
       <div class="legend-item">
         <span class="legend-color full-block" :style="{ backgroundColor: fullDayBlockColor }">
-          <span class="legend-icon" v-html="blockIconHTML"></span>
+          <span v-if="blockIconHTML" class="legend-icon" v-html="blockIconHTML"></span>
         </span>
         <span class="legend-label">{{ legendLabels.fullBlock }}</span>
       </div>
@@ -247,13 +253,6 @@ export default {
       defaultValue: null
     });
 
-    const { value: blockProfissionalId, setValue: setBlockProfissionalId } = wwLib.wwVariable.useComponentVariable({
-      uid: props.uid,
-      name: 'blockProfissionalId',
-      type: 'string',
-      defaultValue: null
-    });
-
     const { value: blockCreatedAt, setValue: setBlockCreatedAt } = wwLib.wwVariable.useComponentVariable({
       uid: props.uid,
       name: 'blockCreatedAt',
@@ -318,8 +317,7 @@ export default {
           data_fim: blockStatus.block.data_fim || null,
           dia_inteiro: diaInteiro,
           created_at: blockStatus.block.created_at || null,
-          motivo: blockStatus.block.motivo || null,
-          profissional_id: blockStatus.block.profissional_id || null
+          motivo: blockStatus.block.motivo || null
         };
 
         // Salvar nas variáveis do componente
@@ -329,7 +327,6 @@ export default {
         setBlockDiaInteiro(diaInteiro);
         setBlockCreatedAt(blockStatus.block.created_at || null);
         setBlockMotivo(blockStatus.block.motivo || null);
-        setBlockProfissionalId(blockStatus.block.profissional_id || null);
       } else {
         // Limpar variáveis se não houver bloqueio
         setBlockId(null);
@@ -338,7 +335,6 @@ export default {
         setBlockDiaInteiro(null);
         setBlockCreatedAt(null);
         setBlockMotivo(null);
-        setBlockProfissionalId(null);
       }
 
       emit('trigger-event', {
@@ -455,10 +451,26 @@ export default {
       borderRadius: props.content?.borderRadius || '8px',
       boxShadow: props.content?.boxShadow || '0 2px 8px rgba(0, 0, 0, 0.1)'
     }));
-    
+
     const buttonStyles = computed(() => ({
       color: props.content?.buttonColor || '#007bff',
       backgroundColor: props.content?.buttonBackgroundColor || 'transparent'
+    }));
+
+    const headerContentStyles = computed(() => ({
+      gap: headerGap.value
+    }));
+
+    const headerSelectStyles = computed(() => ({
+      color: headerTextColor.value,
+      fontSize: headerFontSize.value,
+      borderRadius: headerBorderRadius.value,
+      borderColor: headerBorderColor.value
+    }));
+
+    const headerButtonStyles = computed(() => ({
+      borderRadius: headerBorderRadius.value,
+      borderColor: headerBorderColor.value
     }));
     
     const headerTextColor = computed(() => props.content?.headerTextColor || '#212529');
@@ -491,9 +503,24 @@ export default {
     });
 
     const blockIconHTML = ref('');
+    const availableIconHTML = ref('');
+    const weekdayBlockIconHTML = ref('');
+    const partialBlockIconHTML = ref('');
 
     watch(blockIcon, async () => {
-      blockIconHTML.value = await getIcon(blockIcon.value);
+      if (blockIcon.value) blockIconHTML.value = await getIcon(blockIcon.value);
+    }, { immediate: true });
+
+    watch(availableIcon, async () => {
+      if (availableIcon.value) availableIconHTML.value = await getIcon(availableIcon.value);
+    }, { immediate: true });
+
+    watch(weekdayBlockIcon, async () => {
+      if (weekdayBlockIcon.value) weekdayBlockIconHTML.value = await getIcon(weekdayBlockIcon.value);
+    }, { immediate: true });
+
+    watch(partialBlockIcon, async () => {
+      if (partialBlockIcon.value) partialBlockIconHTML.value = await getIcon(partialBlockIcon.value);
     }, { immediate: true });
     
     const prevIcon = computed(() => props.content?.prevIcon || 'chevron-left');
@@ -533,6 +560,9 @@ export default {
       goToDate,
       containerStyles,
       buttonStyles,
+      headerContentStyles,
+      headerSelectStyles,
+      headerButtonStyles,
       headerTextColor,
       weekdayTextColor,
       dayTextColor,
@@ -550,6 +580,9 @@ export default {
       showReasonLabel,
       legendLabels,
       blockIconHTML,
+      availableIconHTML,
+      weekdayBlockIconHTML,
+      partialBlockIconHTML,
       prevIconHTML,
       nextIconHTML
     };

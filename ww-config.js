@@ -268,7 +268,30 @@ export default {
       defaultValue: false,
       /* wwEditor:start */
       propertyHelp: {
-        tooltip: 'Show time range from block data inside calendar days (e.g., "09:00-17:00")'
+        tooltip: 'Show or hide time labels inside calendar days'
+      }
+      /* wwEditor:end */
+    },
+    timeLabelContent: {
+      label: {
+        en: 'Time label content',
+        pt: 'Conteúdo da label de horário'
+      },
+      type: 'Text',
+      section: 'settings',
+      bindable: true,
+      defaultValue: '',
+      options: {
+        placeholder: 'e.g., 09:00-17:00'
+      },
+      hidden: (content) => !content.showTimeLabel,
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'string',
+        tooltip: 'Bind to any data or use formula'
+      },
+      propertyHelp: {
+        tooltip: 'Custom content for time label. Leave empty to auto-extract from block data.'
       }
       /* wwEditor:end */
     },
@@ -283,7 +306,30 @@ export default {
       defaultValue: false,
       /* wwEditor:start */
       propertyHelp: {
-        tooltip: 'Show reason/motive from block data inside calendar days'
+        tooltip: 'Show or hide reason labels inside calendar days'
+      }
+      /* wwEditor:end */
+    },
+    reasonLabelContent: {
+      label: {
+        en: 'Reason label content',
+        pt: 'Conteúdo da label de motivo'
+      },
+      type: 'Text',
+      section: 'settings',
+      bindable: true,
+      defaultValue: '',
+      options: {
+        placeholder: 'e.g., Compromisso'
+      },
+      hidden: (content) => !content.showReasonLabel,
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'string',
+        tooltip: 'Bind to any data or use formula'
+      },
+      propertyHelp: {
+        tooltip: 'Custom content for reason label. Leave empty to auto-extract from block data.'
       }
       /* wwEditor:end */
     },

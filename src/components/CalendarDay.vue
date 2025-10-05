@@ -7,7 +7,7 @@
   >
     <span v-if="currentIconHTML" class="day-icon" v-html="currentIconHTML"></span>
     <span class="day-number">{{ dayNumber }}</span>
-    <span v-if="showTimeLabel && timeText" class="time-label">{{ timeText }}</span>
+    <span v-if="showTimeLabel && timeText && !isFullDayBlocked" class="time-label">{{ timeText }}</span>
     <span v-if="showReasonLabel && reasonText" class="reason-label">{{ reasonText }}</span>
   </div>
 </template>

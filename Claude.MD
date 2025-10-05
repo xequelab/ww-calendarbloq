@@ -70,7 +70,6 @@ Componente especializado de calendário desenvolvido para sistemas de agendament
 - blockDataFim: Data de fim do bloqueio (caminho: variables['uid-blockDataFim'])
 - blockDiaInteiro: Boolean indicando se é bloqueio de dia inteiro (caminho: variables['uid-blockDiaInteiro'])
 - blockMotivo: Motivo do bloqueio (caminho: variables['uid-blockMotivo'])
-- blockProfissionalId: ID do profissional associado ao bloqueio (caminho: variables['uid-blockProfissionalId'])
 - blockCreatedAt: Timestamp de criação do bloqueio (caminho: variables['uid-blockCreatedAt'])
 
 ***Notas Importantes:***

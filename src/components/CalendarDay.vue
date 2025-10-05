@@ -6,9 +6,9 @@
     @click="handleClick"
   >
     <span v-if="currentIconHTML" class="day-icon" v-html="currentIconHTML"></span>
-    <span class="day-number">{{ dayNumber }}</span>
-    <span v-if="showTimeLabel && timeText && !isFullDayBlocked" class="time-label">{{ timeText }}</span>
-    <span v-if="showReasonLabel && reasonText" class="reason-label">{{ reasonText }}</span>
+    <span class="day-number" :style="{ fontSize: dayNumberFontSize }">{{ dayNumber }}</span>
+    <span v-if="showTimeLabel && timeText && !isFullDayBlocked" class="time-label" :style="{ fontSize: timeLabelFontSize }">{{ timeText }}</span>
+    <span v-if="showReasonLabel && reasonText" class="reason-label" :style="{ fontSize: reasonLabelFontSize }">{{ reasonText }}</span>
   </div>
 </template>
 
@@ -279,7 +279,6 @@ export default {
   }
 
   .day-number {
-    font-size: v-bind(dayNumberFontSize);
     font-weight: 500;
     z-index: 1;
   }
@@ -289,7 +288,6 @@ export default {
   }
 
   .time-label {
-    font-size: v-bind(timeLabelFontSize);
     z-index: 1;
     opacity: 0.9;
     text-align: center;
@@ -301,7 +299,6 @@ export default {
   }
 
   .reason-label {
-    font-size: v-bind(reasonLabelFontSize);
     z-index: 1;
     opacity: 0.9;
     text-align: center;

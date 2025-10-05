@@ -52,11 +52,11 @@
     </div>
     
     <div class="calendar-weekdays">
-      <div 
-        v-for="day in weekdayLabels" 
-        :key="day" 
+      <div
+        v-for="day in weekdayLabels"
+        :key="day"
         class="weekday-label"
-        :style="{ color: weekdayTextColor }"
+        :style="{ color: weekdayTextColor, fontSize: weekdayFontSize }"
       >
         {{ day }}
       </div>
@@ -90,25 +90,25 @@
     </div>
 
     <div v-if="showLegend" class="calendar-legend">
-      <div class="legend-item">
+      <div class="legend-item" :style="{ fontSize: legendFontSize }">
         <span class="legend-color" :style="{ backgroundColor: availableColor }">
           <span v-if="availableIconHTML" class="legend-icon" v-html="availableIconHTML"></span>
         </span>
         <span class="legend-label">{{ legendLabels.available }}</span>
       </div>
-      <div class="legend-item">
+      <div class="legend-item" :style="{ fontSize: legendFontSize }">
         <span class="legend-color" :style="{ backgroundColor: weekdayBlockColor }">
           <span v-if="weekdayBlockIconHTML" class="legend-icon" v-html="weekdayBlockIconHTML"></span>
         </span>
         <span class="legend-label">{{ legendLabels.weekdayBlock }}</span>
       </div>
-      <div class="legend-item">
+      <div class="legend-item" :style="{ fontSize: legendFontSize }">
         <span class="legend-color" :style="{ backgroundColor: specificBlockColor }">
           <span v-if="partialBlockIconHTML" class="legend-icon" v-html="partialBlockIconHTML"></span>
         </span>
         <span class="legend-label">{{ legendLabels.partialBlock }}</span>
       </div>
-      <div class="legend-item">
+      <div class="legend-item" :style="{ fontSize: legendFontSize }">
         <span class="legend-color full-block" :style="{ backgroundColor: fullDayBlockColor }">
           <span v-if="blockIconHTML" class="legend-icon" v-html="blockIconHTML"></span>
         </span>
@@ -601,6 +601,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 .appointment-calendar {
   width: 100%;
   max-width: 100%;
@@ -685,7 +687,6 @@ export default {
   
   .weekday-label {
     text-align: center;
-    font-size: v-bind(weekdayFontSize);
     font-weight: 600;
     text-transform: uppercase;
     padding: 8px 0;
@@ -711,7 +712,6 @@ export default {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: v-bind(legendFontSize);
 
     .legend-color {
       width: 20px;

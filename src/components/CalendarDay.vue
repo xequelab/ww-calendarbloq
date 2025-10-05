@@ -187,10 +187,6 @@ export default {
       opacity: 1;
       filter: brightness(0) invert(1);
     }
-
-    &:hover {
-      opacity: 0.9;
-    }
   }
 
   .lock-icon {

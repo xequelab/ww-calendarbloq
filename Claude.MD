@@ -27,7 +27,7 @@ Componente especializado de calendário desenvolvido para sistemas de agendament
 
 ***Propriedades:***
 - blockedWeekdays: number[] - Array de números de dias da semana (0-6, onde 0=Domingo) para bloquear em todas as semanas. Exemplo: [0, 6] bloqueia todos os domingos e sábados
-- specificBlocks: object[] - Array de bloqueios específicos do banco de dados com estrutura: { data_inicio: '2024-01-01', data_fim: '2024-01-05', dia_completo: true, horario_inicio: '09:00', horario_fim: '17:00' }
+- specificBlocks: object[] - Array de bloqueios específicos do banco de dados com estrutura: { id: 'uuid', data_inicio: '2024-01-01', data_fim: '2024-01-05', dia_inteiro: true (ou dia_completo: true), motivo: 'texto', profissional_id: 'uuid', created_at: 'timestamp' }
 - weekdayLabels: string[] - Array de 7 rótulos para dias da semana começando com domingo. Padrão: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 - monthNames: string[] - Array de 12 nomes de meses para o seletor dropdown. Padrão: ['Janeiro', 'Fevereiro', 'Março', ...] (nomes em português)
 - startYear: number|null - Primeiro ano disponível no seletor de ano. Padrão: ano atual (não permite anos passados)
@@ -53,7 +53,7 @@ Componente especializado de calendário desenvolvido para sistemas de agendament
 - nextIcon: string - Nome do ícone do sistema para botão de próximo mês (padrão: 'chevron-right')
 
 ***Eventos:***
-- dateClick: Disparado quando o usuário clica em qualquer data. Payload: { date: '2024-01-15' (string ISO), timestamp: 1705276800000, isBlocked: false, blockType: 'available'|'weekday'|'specific', blockInfo: {...} (objeto de bloqueio se bloqueio específico) }
+- dateClick: Disparado quando o usuário clica em qualquer data. Payload: { date: '2024-01-15' (string ISO), timestamp: 1705276800000, isBlocked: false, blockType: 'available'|'weekday'|'specific', blockInfo: { id, data_inicio, data_fim, dia_inteiro, created_at, motivo, profissional_id } ou null }
 - monthChange: Disparado quando o usuário navega para um mês diferente. Payload: { month: 'Janeiro 2024', direction: 'previous'|'next'|'today'|'selector' }
 
 ***Ações Expostas:***
@@ -72,9 +72,10 @@ Componente especializado de calendário desenvolvido para sistemas de agendament
 - Seletores de mês e ano são sincronizados com a navegação por setas
 - O intervalo de anos padrão é do ano atual até ano atual + 10 (customizável com startYear e endYear)
 - Datas fora do mês atual são exibidas com opacidade reduzida e não são clicáveis
-- **Hierarquia de bloqueios**: Bloqueios de dia completo (dia_completo = true) são visualmente distintos com ícone de cadeado e fundo vermelho; bloqueios parciais aparecem em vermelho claro; bloqueios semanais em cinza
+- **Hierarquia de bloqueios**: Bloqueios de dia completo (dia_inteiro = true ou dia_completo = true) são visualmente distintos com ícone de cadeado e fundo vermelho; bloqueios parciais aparecem em vermelho claro; bloqueios semanais em cinza
 - A propriedade specificBlocks foi projetada para trabalhar diretamente com resultados de consultas Supabase da tabela "bloqueios_profissional"
-- O campo `dia_completo` determina se um bloqueio específico aparece como bloqueado completamente (com ícone) ou bloqueio parcial
+- O campo `dia_inteiro` (ou `dia_completo` para retrocompatibilidade) determina se um bloqueio específico aparece como bloqueado completamente (com ícone) ou bloqueio parcial
+- **Todos os dados do bloqueio** (id, data_inicio, data_fim, dia_inteiro, created_at, motivo, profissional_id) são passados no evento dateClick através de blockInfo, permitindo workflows complexos no WeWeb
 - Todas as entradas de data devem estar em formato ISO (YYYY-MM-DD) para consistência
 - Campos de horário (horario_inicio, horario_fim) em bloqueios específicos são armazenados mas não utilizados atualmente para exibição visual - estão disponíveis no payload do evento de clique para lógica de workflow
 - O calendário destaca automaticamente a data de hoje com uma borda distintiva

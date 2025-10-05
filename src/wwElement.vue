@@ -207,12 +207,26 @@ export default {
     
     const handleDayClick = (date) => {
       if (isEditing.value) return;
-      
+
       const blockStatus = getBlockStatus(date);
       const dateISO = formatDateISO(date);
-      
+
       setSelectedDate(dateISO);
-      
+
+      // Preparar informações detalhadas do bloqueio
+      let blockDetails = null;
+      if (blockStatus.blocked && blockStatus.block) {
+        blockDetails = {
+          id: blockStatus.block.id || null,
+          data_inicio: blockStatus.block.data_inicio || null,
+          data_fim: blockStatus.block.data_fim || null,
+          dia_inteiro: blockStatus.block.dia_inteiro !== undefined ? blockStatus.block.dia_inteiro : blockStatus.block.dia_completo,
+          created_at: blockStatus.block.created_at || null,
+          motivo: blockStatus.block.motivo || null,
+          profissional_id: blockStatus.block.profissional_id || null
+        };
+      }
+
       emit('trigger-event', {
         name: 'dateClick',
         event: {
@@ -220,7 +234,7 @@ export default {
           timestamp: date.getTime(),
           isBlocked: blockStatus.blocked,
           blockType: blockStatus.type,
-          blockInfo: blockStatus.block || null
+          blockInfo: blockDetails
         }
       });
     };

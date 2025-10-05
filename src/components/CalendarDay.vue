@@ -78,7 +78,7 @@ export default {
     const isFullDayBlocked = computed(() => {
       return props.blockStatus?.blocked &&
              props.blockStatus?.type === 'specific' &&
-             props.blockStatus?.block?.dia_completo === true;
+             (props.blockStatus?.block?.dia_completo === true || props.blockStatus?.block?.dia_inteiro === true);
     });
 
     const lockIconHTML = ref('');

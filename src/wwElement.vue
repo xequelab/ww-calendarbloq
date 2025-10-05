@@ -84,6 +84,7 @@
         :day-number-font-size="dayNumberFontSize"
         :time-label-font-size="timeLabelFontSize"
         :reason-label-font-size="reasonLabelFontSize"
+        :timezone="timezone"
         :is-editing="isEditing"
         @click="handleDayClick"
       />

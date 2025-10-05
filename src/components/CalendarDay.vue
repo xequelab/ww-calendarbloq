@@ -94,6 +94,10 @@ export default {
     reasonLabelFontSize: {
       type: String,
       default: '10px'
+    },
+    timezone: {
+      type: String,
+      default: 'America/Sao_Paulo'
     }
   },
   emits: ['click'],
@@ -118,8 +122,37 @@ export default {
     const timeText = computed(() => {
       if (props.blockStatus?.blocked && props.blockStatus?.block) {
         const block = props.blockStatus.block;
-        const inicio = block.horario_inicio || (block.data_inicio ? block.data_inicio.split('T')[1]?.substring(0, 5) : null);
-        const fim = block.horario_fim || (block.data_fim ? block.data_fim.split('T')[1]?.substring(0, 5) : null);
+
+        // Função para converter UTC para timezone local
+        const convertUTCToLocal = (dateTimeString) => {
+          if (!dateTimeString) return null;
+
+          try {
+            // Se for apenas horário (HH:MM), retorna direto
+            if (dateTimeString.match(/^\d{2}:\d{2}$/)) {
+              return dateTimeString;
+            }
+
+            // Se for datetime completo, extrair e converter
+            const utcDate = new Date(dateTimeString);
+            if (isNaN(utcDate.getTime())) return null;
+
+            // Converter para timezone local (simplificado - usar offset)
+            const offsetMinutes = utcDate.getTimezoneOffset();
+            const localDate = new Date(utcDate.getTime() - (offsetMinutes * 60000));
+
+            const hours = String(localDate.getHours()).padStart(2, '0');
+            const minutes = String(localDate.getMinutes()).padStart(2, '0');
+
+            return `${hours}:${minutes}`;
+          } catch (e) {
+            console.warn('Error converting time:', e);
+            return null;
+          }
+        };
+
+        const inicio = convertUTCToLocal(block.horario_inicio || block.data_inicio);
+        const fim = convertUTCToLocal(block.horario_fim || block.data_fim);
 
         if (inicio && fim) {
           return `${inicio}-${fim}`;

@@ -15,7 +15,6 @@
 <script>
 import { computed, ref, watch } from 'vue';
 import { format, isSameDay, isToday } from 'date-fns';
-import { utcToZonedTime, formatInTimeZone } from 'date-fns-tz';
 
 export default {
   name: 'CalendarDay',
@@ -138,22 +137,17 @@ export default {
             const utcDate = new Date(dateTimeString);
             if (isNaN(utcDate.getTime())) return null;
 
-            // Debug: logar timezone e conversão
-            console.log('Converting time:', {
-              input: dateTimeString,
-              utcDate: utcDate.toISOString(),
-              timezone: props.timezone
-            });
-
-            // Converter para o timezone configurado usando date-fns-tz
-            const zonedDate = utcToZonedTime(utcDate, props.timezone);
-            const timeFormatted = format(zonedDate, 'HH:mm');
-
-            console.log('Converted to:', timeFormatted);
+            // Converter usando Intl.DateTimeFormat com timezone configurado
+            const timeFormatted = new Intl.DateTimeFormat('en-US', {
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false,
+              timeZone: props.timezone
+            }).format(utcDate);
 
             return timeFormatted;
           } catch (e) {
-            console.warn('Error converting time to timezone:', e, dateTimeString);
+            console.warn('Error converting time to timezone:', e, dateTimeString, props.timezone);
             return null;
           }
         };

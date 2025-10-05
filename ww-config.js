@@ -1,8 +1,8 @@
 export default {
   editor: {
     label: {
-      en: 'Appointment Calendar',
-      pt: 'Calendário de Agendamentos'
+      en: 'Calendar',
+      pt: 'Calendário'
     },
     icon: 'calendar'
   },

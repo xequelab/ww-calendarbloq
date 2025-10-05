@@ -61,8 +61,17 @@ export function isDateBlocked(date, blockedWeekdays, specificBlocks) {
       // If both dates exist, check if within interval
       if (startDate && isValid(startDate) && endDate && isValid(endDate)) {
         try {
-          if (isWithinInterval(date, { start: startDate, end: endDate })) {
-            return { blocked: true, type: 'specific', block };
+          // Verificar se start e end são no mesmo dia (bloqueio parcial de horário)
+          if (isSameDay(startDate, endDate)) {
+            // Se for mesmo dia, verificar se o dia do calendário é esse dia
+            if (isSameDay(date, startDate)) {
+              return { blocked: true, type: 'specific', block };
+            }
+          } else {
+            // Se for intervalo de dias diferentes, verificar se está dentro do intervalo
+            if (isWithinInterval(date, { start: startDate, end: endDate })) {
+              return { blocked: true, type: 'specific', block };
+            }
           }
         } catch (e) {
           console.warn('Invalid date interval:', e);

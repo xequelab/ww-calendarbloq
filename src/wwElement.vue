@@ -177,12 +177,75 @@ export default {
       type: 'string',
       defaultValue: null
     });
-    
+
     const { value: currentMonth, setValue: setCurrentMonth } = wwLib.wwVariable.useComponentVariable({
       uid: props.uid,
       name: 'currentMonth',
       type: 'string',
       defaultValue: computed(() => formatMonthYear(currentDate.value))
+    });
+
+    const { value: blockId, setValue: setBlockId } = wwLib.wwVariable.useComponentVariable({
+      uid: props.uid,
+      name: 'blockId',
+      type: 'string',
+      defaultValue: null
+    });
+
+    const { value: blockDataInicio, setValue: setBlockDataInicio } = wwLib.wwVariable.useComponentVariable({
+      uid: props.uid,
+      name: 'blockDataInicio',
+      type: 'string',
+      defaultValue: null
+    });
+
+    const { value: blockDataFim, setValue: setBlockDataFim } = wwLib.wwVariable.useComponentVariable({
+      uid: props.uid,
+      name: 'blockDataFim',
+      type: 'string',
+      defaultValue: null
+    });
+
+    const { value: blockDiaInteiro, setValue: setBlockDiaInteiro } = wwLib.wwVariable.useComponentVariable({
+      uid: props.uid,
+      name: 'blockDiaInteiro',
+      type: 'boolean',
+      defaultValue: null
+    });
+
+    const { value: blockMotivo, setValue: setBlockMotivo } = wwLib.wwVariable.useComponentVariable({
+      uid: props.uid,
+      name: 'blockMotivo',
+      type: 'string',
+      defaultValue: null
+    });
+
+    const { value: blockProfissionalId, setValue: setBlockProfissionalId } = wwLib.wwVariable.useComponentVariable({
+      uid: props.uid,
+      name: 'blockProfissionalId',
+      type: 'string',
+      defaultValue: null
+    });
+
+    const { value: blockCreatedAt, setValue: setBlockCreatedAt } = wwLib.wwVariable.useComponentVariable({
+      uid: props.uid,
+      name: 'blockCreatedAt',
+      type: 'string',
+      defaultValue: null
+    });
+
+    const { value: isBlocked, setValue: setIsBlocked } = wwLib.wwVariable.useComponentVariable({
+      uid: props.uid,
+      name: 'isBlocked',
+      type: 'boolean',
+      defaultValue: false
+    });
+
+    const { value: blockType, setValue: setBlockType } = wwLib.wwVariable.useComponentVariable({
+      uid: props.uid,
+      name: 'blockType',
+      type: 'string',
+      defaultValue: 'available'
     });
     
     const calendarDays = computed(() => getCalendarDays(currentDate.value));
@@ -212,19 +275,43 @@ export default {
       const dateISO = formatDateISO(date);
 
       setSelectedDate(dateISO);
+      setIsBlocked(blockStatus.blocked);
+      setBlockType(blockStatus.type);
 
       // Preparar informações detalhadas do bloqueio
       let blockDetails = null;
       if (blockStatus.blocked && blockStatus.block) {
+        const diaInteiro = blockStatus.block.dia_inteiro !== undefined
+          ? blockStatus.block.dia_inteiro
+          : blockStatus.block.dia_completo;
+
         blockDetails = {
           id: blockStatus.block.id || null,
           data_inicio: blockStatus.block.data_inicio || null,
           data_fim: blockStatus.block.data_fim || null,
-          dia_inteiro: blockStatus.block.dia_inteiro !== undefined ? blockStatus.block.dia_inteiro : blockStatus.block.dia_completo,
+          dia_inteiro: diaInteiro,
           created_at: blockStatus.block.created_at || null,
           motivo: blockStatus.block.motivo || null,
           profissional_id: blockStatus.block.profissional_id || null
         };
+
+        // Salvar nas variáveis do componente
+        setBlockId(blockStatus.block.id || null);
+        setBlockDataInicio(blockStatus.block.data_inicio || null);
+        setBlockDataFim(blockStatus.block.data_fim || null);
+        setBlockDiaInteiro(diaInteiro);
+        setBlockCreatedAt(blockStatus.block.created_at || null);
+        setBlockMotivo(blockStatus.block.motivo || null);
+        setBlockProfissionalId(blockStatus.block.profissional_id || null);
+      } else {
+        // Limpar variáveis se não houver bloqueio
+        setBlockId(null);
+        setBlockDataInicio(null);
+        setBlockDataFim(null);
+        setBlockDiaInteiro(null);
+        setBlockCreatedAt(null);
+        setBlockMotivo(null);
+        setBlockProfissionalId(null);
       }
 
       emit('trigger-event', {

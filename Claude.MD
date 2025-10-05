@@ -63,6 +63,15 @@ Componente especializado de calendário desenvolvido para sistemas de agendament
 ***Variáveis Expostas:***
 - selectedDate: Última data clicada em formato ISO (caminho: variables['uid-selectedDate'])
 - currentMonth: Mês e ano atualmente exibidos (caminho: variables['uid-currentMonth'])
+- isBlocked: Boolean indicando se a data clicada está bloqueada (caminho: variables['uid-isBlocked'])
+- blockType: Tipo de bloqueio: 'available', 'weekday' ou 'specific' (caminho: variables['uid-blockType'])
+- blockId: ID do bloqueio no banco de dados (caminho: variables['uid-blockId'])
+- blockDataInicio: Data de início do bloqueio (caminho: variables['uid-blockDataInicio'])
+- blockDataFim: Data de fim do bloqueio (caminho: variables['uid-blockDataFim'])
+- blockDiaInteiro: Boolean indicando se é bloqueio de dia inteiro (caminho: variables['uid-blockDiaInteiro'])
+- blockMotivo: Motivo do bloqueio (caminho: variables['uid-blockMotivo'])
+- blockProfissionalId: ID do profissional associado ao bloqueio (caminho: variables['uid-blockProfissionalId'])
+- blockCreatedAt: Timestamp de criação do bloqueio (caminho: variables['uid-blockCreatedAt'])
 
 ***Notas Importantes:***
 - O componente utiliza a biblioteca date-fns para cálculos e formatação confiável de datas

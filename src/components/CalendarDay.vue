@@ -138,9 +138,18 @@ export default {
             const utcDate = new Date(dateTimeString);
             if (isNaN(utcDate.getTime())) return null;
 
+            // Debug: logar timezone e conversão
+            console.log('Converting time:', {
+              input: dateTimeString,
+              utcDate: utcDate.toISOString(),
+              timezone: props.timezone
+            });
+
             // Converter para o timezone configurado usando date-fns-tz
             const zonedDate = utcToZonedTime(utcDate, props.timezone);
             const timeFormatted = format(zonedDate, 'HH:mm');
+
+            console.log('Converted to:', timeFormatted);
 
             return timeFormatted;
           } catch (e) {

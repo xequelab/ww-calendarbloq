@@ -174,10 +174,11 @@ export default {
   }
 
   &.is-blocked {
-    cursor: not-allowed;
+    cursor: pointer;
 
     &:hover {
-      opacity: 0.8;
+      transform: scale(1.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
   }
 

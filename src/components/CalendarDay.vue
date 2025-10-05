@@ -140,11 +140,7 @@ export default {
             // Converter usando Intl.DateTimeFormat com timezone configurado
             const timezone = props.timezone || 'America/Sao_Paulo';
 
-            console.log('🌍 Timezone conversion:', {
-              input: dateTimeString,
-              timezone: timezone,
-              utcDate: utcDate.toISOString()
-            });
+            console.log(`🌍 Converting ${dateTimeString} to timezone: ${timezone}`);
 
             const timeFormatted = new Intl.DateTimeFormat('en-US', {
               hour: '2-digit',
@@ -153,7 +149,7 @@ export default {
               timeZone: timezone
             }).format(utcDate);
 
-            console.log('⏰ Result:', timeFormatted);
+            console.log(`⏰ Result: ${timeFormatted} (timezone was: ${timezone})`);
 
             return timeFormatted;
           } catch (e) {

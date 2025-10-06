@@ -158,9 +158,23 @@ export default {
             return !isFullDay;
           }) // Filtrar apenas bloqueios parciais
           .map(block => {
-            const inicio = block.horario_inicio;
-            const fim = block.horario_fim;
-            console.log('[CalendarDay] Processing times:', { inicio, fim, timezone: props.timezone });
+            // Extrair horário dos timestamps se não houver horario_inicio/horario_fim
+            let inicio = block.horario_inicio;
+            let fim = block.horario_fim;
+
+            // Se não tiver horario_inicio mas tiver data_inicio com horário, extrair
+            if (!inicio && block.data_inicio && block.data_inicio.includes('T')) {
+              const timePart = block.data_inicio.split('T')[1];
+              inicio = timePart.split('+')[0].split('Z')[0]; // Remove timezone e Z
+            }
+
+            // Se não tiver horario_fim mas tiver data_fim com horário, extrair
+            if (!fim && block.data_fim && block.data_fim.includes('T')) {
+              const timePart = block.data_fim.split('T')[1];
+              fim = timePart.split('+')[0].split('Z')[0]; // Remove timezone e Z
+            }
+
+            console.log('[CalendarDay] Processing times:', { inicio, fim, timezone: props.timezone, block });
             const range = formatTimeRange(dateStr, inicio, fim, props.timezone);
             console.log('[CalendarDay] Time range result:', range);
             return range;

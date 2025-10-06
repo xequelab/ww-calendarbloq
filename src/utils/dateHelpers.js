@@ -27,37 +27,39 @@ export function isDateBlocked(date, blockedWeekdays, specificBlocks) {
   // Check if day of week is blocked
   const dayOfWeek = getDay(date);
   if (blockedWeekdays && blockedWeekdays.includes(dayOfWeek)) {
-    return { blocked: true, type: 'weekday' };
+    return { blocked: true, type: 'weekday', blocks: [] };
   }
-  
-  // Check if date falls within specific block
+
+  // Collect ALL blocks that match this date
+  const matchingBlocks = [];
+
   if (specificBlocks && Array.isArray(specificBlocks)) {
     for (const block of specificBlocks) {
       if (!block) continue;
-      
+
       let startDate, endDate;
-      
+
       // Parse start date
       if (block.data_inicio) {
-        startDate = typeof block.data_inicio === 'string' 
-          ? parseISO(block.data_inicio) 
+        startDate = typeof block.data_inicio === 'string'
+          ? parseISO(block.data_inicio)
           : new Date(block.data_inicio);
       }
-      
+
       // Parse end date
       if (block.data_fim) {
         endDate = typeof block.data_fim === 'string'
           ? parseISO(block.data_fim)
           : new Date(block.data_fim);
       }
-      
+
       // If only start date exists, check if same day
       if (startDate && isValid(startDate) && !endDate) {
         if (isSameDay(date, startDate)) {
-          return { blocked: true, type: 'specific', block };
+          matchingBlocks.push(block);
         }
       }
-      
+
       // If both dates exist, check if within interval
       if (startDate && isValid(startDate) && endDate && isValid(endDate)) {
         try {
@@ -65,12 +67,12 @@ export function isDateBlocked(date, blockedWeekdays, specificBlocks) {
           if (isSameDay(startDate, endDate)) {
             // Se for mesmo dia, verificar se o dia do calendário é esse dia
             if (isSameDay(date, startDate)) {
-              return { blocked: true, type: 'specific', block };
+              matchingBlocks.push(block);
             }
           } else {
             // Se for intervalo de dias diferentes, verificar se está dentro do intervalo
             if (isWithinInterval(date, { start: startDate, end: endDate })) {
-              return { blocked: true, type: 'specific', block };
+              matchingBlocks.push(block);
             }
           }
         } catch (e) {
@@ -79,8 +81,13 @@ export function isDateBlocked(date, blockedWeekdays, specificBlocks) {
       }
     }
   }
-  
-  return { blocked: false, type: 'available' };
+
+  // Se há bloqueios, retornar o array completo
+  if (matchingBlocks.length > 0) {
+    return { blocked: true, type: 'specific', blocks: matchingBlocks };
+  }
+
+  return { blocked: false, type: 'available', blocks: [] };
 }
 
 export function formatMonthYear(date) {

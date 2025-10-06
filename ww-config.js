@@ -9,7 +9,7 @@ export default {
   triggerEvents: [
     {
       name: 'dateClick',
-      label: { 
+      label: {
         en: 'On date click',
         pt: 'Ao clicar em data'
       },
@@ -18,7 +18,7 @@ export default {
         timestamp: 0,
         isBlocked: false,
         blockType: '',
-        blockInfo: null
+        blockInfo: []
       },
       default: true
     },

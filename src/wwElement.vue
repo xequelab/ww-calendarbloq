@@ -265,6 +265,20 @@ export default {
       defaultValue: null
     });
 
+    const { value: blockHorarioInicioUtc, setValue: setBlockHorarioInicioUtc } = wwLib.wwVariable.useComponentVariable({
+      uid: props.uid,
+      name: 'blockHorarioInicioUtc',
+      type: 'array',
+      defaultValue: []
+    });
+
+    const { value: blockHorarioFimUtc, setValue: setBlockHorarioFimUtc } = wwLib.wwVariable.useComponentVariable({
+      uid: props.uid,
+      name: 'blockHorarioFimUtc',
+      type: 'array',
+      defaultValue: []
+    });
+
     const { value: isBlocked, setValue: setIsBlocked } = wwLib.wwVariable.useComponentVariable({
       uid: props.uid,
       name: 'isBlocked',
@@ -309,29 +323,50 @@ export default {
       setIsBlocked(blockStatus.blocked);
       setBlockType(blockStatus.type);
 
-      // Preparar informações detalhadas do bloqueio
-      let blockDetails = null;
-      if (blockStatus.blocked && blockStatus.block) {
-        const diaInteiro = blockStatus.block.dia_inteiro !== undefined
-          ? blockStatus.block.dia_inteiro
-          : blockStatus.block.dia_completo;
+      // Preparar arrays de informações detalhadas dos bloqueios
+      let blockDetailsArray = [];
+      let horariosInicioUtc = [];
+      let horariosFimUtc = [];
 
-        blockDetails = {
-          id: blockStatus.block.id || null,
-          data_inicio: blockStatus.block.data_inicio || null,
-          data_fim: blockStatus.block.data_fim || null,
-          dia_inteiro: diaInteiro,
-          created_at: blockStatus.block.created_at || null,
-          motivo: blockStatus.block.motivo || null
-        };
+      if (blockStatus.blocked && blockStatus.blocks && blockStatus.blocks.length > 0) {
+        // Processar TODOS os bloqueios daquela data
+        blockDetailsArray = blockStatus.blocks.map(block => {
+          const diaInteiro = block.dia_inteiro !== undefined
+            ? block.dia_inteiro
+            : block.dia_completo;
 
-        // Salvar nas variáveis do componente
-        setBlockId(blockStatus.block.id || null);
-        setBlockDataInicio(blockStatus.block.data_inicio || null);
-        setBlockDataFim(blockStatus.block.data_fim || null);
+          // Adicionar horários UTC aos arrays se existirem
+          if (block.horario_inicio) {
+            horariosInicioUtc.push(block.horario_inicio);
+          }
+          if (block.horario_fim) {
+            horariosFimUtc.push(block.horario_fim);
+          }
+
+          return {
+            id: block.id || null,
+            data_inicio: block.data_inicio || null,
+            data_fim: block.data_fim || null,
+            dia_inteiro: diaInteiro,
+            created_at: block.created_at || null,
+            motivo: block.motivo || null,
+            horario_inicio: block.horario_inicio || null,
+            horario_fim: block.horario_fim || null
+          };
+        });
+
+        // Salvar dados do primeiro bloqueio nas variáveis individuais (retrocompatibilidade)
+        const firstBlock = blockStatus.blocks[0];
+        const diaInteiro = firstBlock.dia_inteiro !== undefined
+          ? firstBlock.dia_inteiro
+          : firstBlock.dia_completo;
+
+        setBlockId(firstBlock.id || null);
+        setBlockDataInicio(firstBlock.data_inicio || null);
+        setBlockDataFim(firstBlock.data_fim || null);
         setBlockDiaInteiro(diaInteiro);
-        setBlockCreatedAt(blockStatus.block.created_at || null);
-        setBlockMotivo(blockStatus.block.motivo || null);
+        setBlockCreatedAt(firstBlock.created_at || null);
+        setBlockMotivo(firstBlock.motivo || null);
       } else {
         // Limpar variáveis se não houver bloqueio
         setBlockId(null);
@@ -342,6 +377,10 @@ export default {
         setBlockMotivo(null);
       }
 
+      // Atualizar arrays de horários UTC
+      setBlockHorarioInicioUtc(horariosInicioUtc);
+      setBlockHorarioFimUtc(horariosFimUtc);
+
       emit('trigger-event', {
         name: 'dateClick',
         event: {
@@ -349,7 +388,7 @@ export default {
           timestamp: date.getTime(),
           isBlocked: blockStatus.blocked,
           blockType: blockStatus.type,
-          blockInfo: blockDetails
+          blockInfo: blockDetailsArray.length > 0 ? blockDetailsArray : null
         }
       });
     };

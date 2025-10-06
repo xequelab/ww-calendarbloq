@@ -53,7 +53,7 @@ Componente especializado de calendário desenvolvido para sistemas de agendament
 - nextIcon: string - Nome do ícone do sistema para botão de próximo mês (padrão: 'chevron-right')
 
 ***Eventos:***
-- dateClick: Disparado quando o usuário clica em qualquer data. Payload: { date: '2024-01-15' (string ISO), timestamp: 1705276800000, isBlocked: false, blockType: 'available'|'weekday'|'specific', blockInfo: { id, data_inicio, data_fim, dia_inteiro, created_at, motivo, profissional_id } ou null }
+- dateClick: Disparado quando o usuário clica em qualquer data. Payload: { date: '2024-01-15' (string ISO), timestamp: 1705276800000, isBlocked: false, blockType: 'available'|'weekday'|'specific', blockInfo: [{ id, data_inicio, data_fim, dia_inteiro, created_at, motivo, horario_inicio, horario_fim }, ...] (array de bloqueios) ou null }
 - monthChange: Disparado quando o usuário navega para um mês diferente. Payload: { month: 'Janeiro 2024', direction: 'previous'|'next'|'today'|'selector' }
 
 ***Ações Expostas:***
@@ -65,12 +65,14 @@ Componente especializado de calendário desenvolvido para sistemas de agendament
 - currentMonth: Mês e ano atualmente exibidos (caminho: variables['uid-currentMonth'])
 - isBlocked: Boolean indicando se a data clicada está bloqueada (caminho: variables['uid-isBlocked'])
 - blockType: Tipo de bloqueio: 'available', 'weekday' ou 'specific' (caminho: variables['uid-blockType'])
-- blockId: ID do bloqueio no banco de dados (caminho: variables['uid-blockId'])
-- blockDataInicio: Data de início do bloqueio (caminho: variables['uid-blockDataInicio'])
-- blockDataFim: Data de fim do bloqueio (caminho: variables['uid-blockDataFim'])
-- blockDiaInteiro: Boolean indicando se é bloqueio de dia inteiro (caminho: variables['uid-blockDiaInteiro'])
-- blockMotivo: Motivo do bloqueio (caminho: variables['uid-blockMotivo'])
-- blockCreatedAt: Timestamp de criação do bloqueio (caminho: variables['uid-blockCreatedAt'])
+- blockId: ID do primeiro bloqueio no banco de dados (caminho: variables['uid-blockId']) - retrocompatibilidade
+- blockDataInicio: Data de início do primeiro bloqueio (caminho: variables['uid-blockDataInicio']) - retrocompatibilidade
+- blockDataFim: Data de fim do primeiro bloqueio (caminho: variables['uid-blockDataFim']) - retrocompatibilidade
+- blockDiaInteiro: Boolean indicando se o primeiro bloqueio é de dia inteiro (caminho: variables['uid-blockDiaInteiro']) - retrocompatibilidade
+- blockMotivo: Motivo do primeiro bloqueio (caminho: variables['uid-blockMotivo']) - retrocompatibilidade
+- blockCreatedAt: Timestamp de criação do primeiro bloqueio (caminho: variables['uid-blockCreatedAt']) - retrocompatibilidade
+- blockHorarioInicioUtc: Array com horários de início UTC de todos os bloqueios da data (caminho: variables['uid-blockHorarioInicioUtc'])
+- blockHorarioFimUtc: Array com horários de fim UTC de todos os bloqueios da data (caminho: variables['uid-blockHorarioFimUtc'])
 
 ***Notas Importantes:***
 - O componente utiliza a biblioteca date-fns para cálculos e formatação confiável de datas
@@ -83,9 +85,11 @@ Componente especializado de calendário desenvolvido para sistemas de agendament
 - **Hierarquia de bloqueios**: Bloqueios de dia completo (dia_inteiro = true ou dia_completo = true) são visualmente distintos com ícone de cadeado e fundo vermelho; bloqueios parciais aparecem em vermelho claro; bloqueios semanais em cinza
 - A propriedade specificBlocks foi projetada para trabalhar diretamente com resultados de consultas Supabase da tabela "bloqueios_profissional"
 - O campo `dia_inteiro` (ou `dia_completo` para retrocompatibilidade) determina se um bloqueio específico aparece como bloqueado completamente (com ícone) ou bloqueio parcial
-- **Todos os dados do bloqueio** (id, data_inicio, data_fim, dia_inteiro, created_at, motivo, profissional_id) são passados no evento dateClick através de blockInfo, permitindo workflows complexos no WeWeb
+- **Suporte para múltiplos bloqueios por dia**: O componente detecta e retorna TODOS os bloqueios de uma data específica através do evento dateClick (blockInfo é um array)
+- **Todos os dados do bloqueio** (id, data_inicio, data_fim, dia_inteiro, created_at, motivo, horario_inicio, horario_fim) são passados no evento dateClick através de blockInfo como array, permitindo workflows complexos no WeWeb
+- **Horários UTC expostos**: As variáveis blockHorarioInicioUtc e blockHorarioFimUtc contêm arrays com os horários UTC de todos os bloqueios, prontos para conversão de timezone via JavaScript
 - Todas as entradas de data devem estar em formato ISO (YYYY-MM-DD) para consistência
-- Campos de horário (horario_inicio, horario_fim) em bloqueios específicos são armazenados mas não utilizados atualmente para exibição visual - estão disponíveis no payload do evento de clique para lógica de workflow
+- Campos de horário (horario_inicio, horario_fim) em bloqueios específicos são incluídos no payload do evento de clique e nas variáveis expostas para conversão de timezone
 - O calendário destaca automaticamente a data de hoje com uma borda distintiva
 - Botões de navegação e seletores são desabilitados no modo de edição para prevenir interferência
 - Todas as interações são desabilitadas quando isEditing é true para garantir comportamento adequado do editor

@@ -7,7 +7,6 @@
  */
 export function convertUtcToTimezone(dateStr, timeStr, timezone) {
   if (!dateStr || !timeStr || !timezone) {
-    console.log('[Timezone] Missing params:', { dateStr, timeStr, timezone });
     return timeStr || '';
   }
 
@@ -18,8 +17,6 @@ export function convertUtcToTimezone(dateStr, timeStr, timezone) {
       const parts = timeStr.split(':');
       normalizedTime = `${parts[0].padStart(2, '0')}:${parts[1].padStart(2, '0')}`;
     }
-
-    console.log('[Timezone] Converting:', { dateStr, originalTime: timeStr, normalizedTime, timezone });
 
     // Criar timestamp UTC completo
     const utcDateTimeStr = `${dateStr}T${normalizedTime}:00Z`;
@@ -35,11 +32,8 @@ export function convertUtcToTimezone(dateStr, timeStr, timezone) {
       hour12: false
     });
 
-    const result = formatter.format(date);
-    console.log('[Timezone] Result:', result);
-    return result;
+    return formatter.format(date);
   } catch (error) {
-    console.warn('[Timezone] Error converting:', error, { dateStr, timeStr, timezone });
     // Em caso de erro, retornar o horário original normalizado
     if (typeof timeStr === 'string' && timeStr.includes(':')) {
       const parts = timeStr.split(':');

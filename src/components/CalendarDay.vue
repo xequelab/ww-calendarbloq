@@ -148,15 +148,26 @@ export default {
       if (props.blockStatus?.blocked && props.blockStatus?.blocks?.length > 0) {
         const dateStr = format(props.date, 'yyyy-MM-dd');
 
+        console.log('[CalendarDay] Processing blocks for date:', dateStr, props.blockStatus.blocks);
+
         // Se houver múltiplos bloqueios, mostrar apenas o primeiro ou combinar
         const timeRanges = props.blockStatus.blocks
-          .filter(block => !block.dia_inteiro && !block.dia_completo) // Filtrar apenas bloqueios parciais
+          .filter(block => {
+            const isFullDay = block.dia_inteiro || block.dia_completo;
+            console.log('[CalendarDay] Block:', { block, isFullDay });
+            return !isFullDay;
+          }) // Filtrar apenas bloqueios parciais
           .map(block => {
             const inicio = block.horario_inicio;
             const fim = block.horario_fim;
-            return formatTimeRange(dateStr, inicio, fim, props.timezone);
+            console.log('[CalendarDay] Processing times:', { inicio, fim, timezone: props.timezone });
+            const range = formatTimeRange(dateStr, inicio, fim, props.timezone);
+            console.log('[CalendarDay] Time range result:', range);
+            return range;
           })
           .filter(range => range); // Remover strings vazias
+
+        console.log('[CalendarDay] Final time ranges:', timeRanges);
 
         if (timeRanges.length > 0) {
           // Mostrar o primeiro range ou combinar múltiplos (você pode customizar aqui)

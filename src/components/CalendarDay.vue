@@ -95,10 +95,6 @@ export default {
       type: String,
       default: '10px'
     },
-    timezone: {
-      type: String,
-      default: 'America/Sao_Paulo'
-    }
   },
   emits: ['click'],
   setup(props, { emit }) {
@@ -123,43 +119,8 @@ export default {
       if (props.blockStatus?.blocked && props.blockStatus?.block) {
         const block = props.blockStatus.block;
 
-        // Função para converter UTC para timezone configurado
-        const convertUTCToTimezone = (dateTimeString) => {
-          if (!dateTimeString) return null;
-
-          try {
-            // Se for apenas horário (HH:MM), assumir como horário local e retornar direto
-            if (dateTimeString.match(/^\d{2}:\d{2}$/)) {
-              return dateTimeString;
-            }
-
-            // Se for datetime completo ISO (com timezone), converter
-            const utcDate = new Date(dateTimeString);
-            if (isNaN(utcDate.getTime())) return null;
-
-            // Converter usando Intl.DateTimeFormat com timezone configurado
-            const timezone = props.timezone || 'America/Sao_Paulo';
-
-            console.log(`🌍 [v2.0] Converting ${dateTimeString} to timezone: ${timezone}`);
-
-            const timeFormatted = new Intl.DateTimeFormat('en-US', {
-              hour: '2-digit',
-              minute: '2-digit',
-              hour12: false,
-              timeZone: timezone
-            }).format(utcDate);
-
-            console.log(`⏰ Result: ${timeFormatted} (timezone was: ${timezone})`);
-
-            return timeFormatted;
-          } catch (e) {
-            console.warn('Error converting time to timezone:', e, dateTimeString, props.timezone);
-            return null;
-          }
-        };
-
-        const inicio = convertUTCToTimezone(block.horario_inicio || block.data_inicio);
-        const fim = convertUTCToTimezone(block.horario_fim || block.data_fim);
+        const inicio = block.horario_inicio;
+        const fim = block.horario_fim;
 
         if (inicio && fim) {
           return `${inicio}-${fim}`;

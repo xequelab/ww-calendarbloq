@@ -84,7 +84,6 @@
         :day-number-font-size="dayNumberFontSize"
         :time-label-font-size="timeLabelFontSize"
         :reason-label-font-size="reasonLabelFontSize"
-        :timezone="timezone"
         :is-editing="isEditing"
         @click="handleDayClick"
       />
@@ -504,7 +503,6 @@ export default {
     const reasonLabelFontSize = computed(() => props.content?.reasonLabelFontSize || '10px');
     const legendFontSize = computed(() => props.content?.legendFontSize || '12px');
     const fontFamily = computed(() => props.content?.fontFamily || 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif');
-    const timezone = computed(() => props.content?.timezone || 'America/Sao_Paulo');
 
     const legendLabels = computed(() => props.content?.legendLabels || {
       available: 'Disponível',

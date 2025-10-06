@@ -975,28 +975,6 @@ tooltip: 'Font family for the entire calendar component'
 }
 /* wwEditor:end */
 },
-timezone: {
-label: {
-en: 'Timezone',
-pt: 'Fuso horário'
-},
-type: 'Text',
-section: 'settings',
-bindable: true,
-defaultValue: 'America/Sao_Paulo',
-options: {
-placeholder: 'e.g., America/Sao_Paulo'
-},
-/* wwEditor:start */
-bindingValidation: {
-type: 'string',
-tooltip: 'IANA timezone identifier. Examples: America/Sao_Paulo, America/New_York, Europe/London'
-},
-propertyHelp: {
-tooltip: 'Timezone for converting UTC times to local time. Uses IANA timezone database.'
-}
-/* wwEditor:end */
-}
 },
 actions: [
 {

@@ -69,6 +69,7 @@
         :date="day"
         :is-current-month="isInCurrentMonth(day)"
         :block-status="getBlockStatus(day)"
+        :timezone="timezone"
         :available-color="availableColor"
         :weekday-block-color="weekdayBlockColor"
         :specific-block-color="specificBlockColor"
@@ -526,6 +527,7 @@ export default {
     const fullDayBlockColor = computed(() => props.content?.fullDayBlockColor || '#dc3545');
     const currentDayBorderColor = computed(() => props.content?.currentDayBorderColor || '#007bff');
 
+    const timezone = computed(() => props.content?.timezone || 'America/Sao_Paulo');
     const blockIcon = computed(() => props.content?.blockIcon || 'lock');
     const availableIcon = computed(() => props.content?.availableIcon || '');
     const weekdayBlockIcon = computed(() => props.content?.weekdayBlockIcon || '');
@@ -623,6 +625,7 @@ export default {
       specificBlockColor,
       fullDayBlockColor,
       currentDayBorderColor,
+      timezone,
       blockIcon,
       availableIcon,
       weekdayBlockIcon,

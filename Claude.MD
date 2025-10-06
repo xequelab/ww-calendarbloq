@@ -15,19 +15,22 @@ Componente especializado de calendário desenvolvido para sistemas de agendament
 - Botões de seta para navegação entre meses (anterior/próximo)
 - **Bloqueio automático de datas passadas** - Impede seleção de meses/anos anteriores ao atual
 - Sistema de bloqueio em quatro níveis: dias disponíveis, bloqueios semanais recorrentes, bloqueios parciais e bloqueios de dia completo
+- **Conversão automática de timezone** - Horários UTC são convertidos automaticamente para o fuso horário configurado e exibidos nos dias bloqueados parcialmente
+- **Suporte para múltiplos bloqueios por dia** - Detecta e processa todos os bloqueios de uma mesma data
 - Distinção visual através de codificação por cores (verde para disponível, cinza para bloqueios semanais, vermelho claro para bloqueios parciais, vermelho escuro para bloqueios completos)
 - Datas bloqueadas completamente exibem ícone de cadeado e fundo vermelho distinto
 - Legenda interativa mostrando todos os estados de disponibilidade com indicadores de cores
 - Destaque do dia atual com borda customizável
 - Efeitos hover em datas clicáveis
 - Layout em grade responsivo que se adapta ao tamanho do container
-- Desenvolvido com date-fns para manipulação confiável de datas
+- Desenvolvido com date-fns e date-fns-tz para manipulação confiável de datas e timezones
 - Cores, ícones e labels totalmente customizáveis
 - Interface 100% em português do Brasil por padrão
 
 ***Propriedades:***
 - blockedWeekdays: number[] - Array de números de dias da semana (0-6, onde 0=Domingo) para bloquear em todas as semanas. Exemplo: [0, 6] bloqueia todos os domingos e sábados
-- specificBlocks: object[] - Array de bloqueios específicos do banco de dados com estrutura: { id: 'uuid', data_inicio: '2024-01-01', data_fim: '2024-01-05', dia_inteiro: true (ou dia_completo: true), motivo: 'texto', profissional_id: 'uuid', created_at: 'timestamp' }
+- specificBlocks: object[] - Array de bloqueios específicos do banco de dados com estrutura: { id: 'uuid', data_inicio: '2024-01-01', data_fim: '2024-01-05', dia_inteiro: true (ou dia_completo: true), motivo: 'texto', horario_inicio: 'HH:mm', horario_fim: 'HH:mm', profissional_id: 'uuid', created_at: 'timestamp' }
+- timezone: string - Fuso horário IANA para conversão automática de horários UTC (padrão: 'America/Sao_Paulo'). Exemplos: 'America/New_York', 'Europe/London', 'Asia/Tokyo'
 - weekdayLabels: string[] - Array de 7 rótulos para dias da semana começando com domingo. Padrão: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
 - monthNames: string[] - Array de 12 nomes de meses para o seletor dropdown. Padrão: ['Janeiro', 'Fevereiro', 'Março', ...] (nomes em português)
 - startYear: number|null - Primeiro ano disponível no seletor de ano. Padrão: ano atual (não permite anos passados)

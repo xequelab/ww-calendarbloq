@@ -257,6 +257,28 @@ export default {
       }
       /* wwEditor:end */
     },
+    timezone: {
+      label: {
+        en: 'Timezone',
+        pt: 'Fuso horário'
+      },
+      type: 'Text',
+      section: 'settings',
+      bindable: true,
+      defaultValue: 'America/Sao_Paulo',
+      options: {
+        placeholder: 'America/Sao_Paulo'
+      },
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'string',
+        tooltip: 'IANA timezone string (e.g., America/Sao_Paulo, America/New_York, Europe/London)'
+      },
+      propertyHelp: {
+        tooltip: 'Timezone for displaying block times. Use IANA timezone format (e.g., America/Sao_Paulo)'
+      }
+      /* wwEditor:end */
+    },
     showTimeLabel: {
       label: {
         en: 'Show time label',

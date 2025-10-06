@@ -15,6 +15,7 @@
 <script>
 import { computed, ref, watch } from 'vue';
 import { format, isSameDay, isToday } from 'date-fns';
+import { formatTimeRange } from '../utils/timezoneHelpers.js';
 
 export default {
   name: 'CalendarDay',
@@ -29,7 +30,11 @@ export default {
     },
     blockStatus: {
       type: Object,
-      default: () => ({ blocked: false, type: 'available' })
+      default: () => ({ blocked: false, type: 'available', blocks: [] })
+    },
+    timezone: {
+      type: String,
+      default: 'America/Sao_Paulo'
     },
     availableColor: {
       type: String,
@@ -111,16 +116,20 @@ export default {
     const isCurrentDay = computed(() => isToday(props.date));
 
     const blockInfo = computed(() => {
-      if (props.blockStatus?.blocked && props.blockStatus?.type === 'specific') {
-        return props.blockStatus.block;
+      if (props.blockStatus?.blocked && props.blockStatus?.type === 'specific' && props.blockStatus?.blocks?.length > 0) {
+        return props.blockStatus.blocks;
       }
-      return null;
+      return [];
     });
 
     const isFullDayBlocked = computed(() => {
-      return props.blockStatus?.blocked &&
-             props.blockStatus?.type === 'specific' &&
-             (props.blockStatus?.block?.dia_completo === true || props.blockStatus?.block?.dia_inteiro === true);
+      // Verificar se TODOS os bloqueios são de dia inteiro
+      if (props.blockStatus?.blocked && props.blockStatus?.type === 'specific' && props.blockStatus?.blocks?.length > 0) {
+        return props.blockStatus.blocks.every(block =>
+          block?.dia_completo === true || block?.dia_inteiro === true
+        );
+      }
+      return false;
     });
 
     const timeText = computed(() => {
@@ -135,25 +144,32 @@ export default {
         }
       }
 
-      // Prioridade 2: Auto-extrair do blockStatus
-      if (props.blockStatus?.blocked && props.blockStatus?.block) {
-        const block = props.blockStatus.block;
+      // Prioridade 2: Auto-extrair dos bloqueios e converter timezone
+      if (props.blockStatus?.blocked && props.blockStatus?.blocks?.length > 0) {
+        const dateStr = format(props.date, 'yyyy-MM-dd');
 
-        const inicio = block.horario_inicio;
-        const fim = block.horario_fim;
+        // Se houver múltiplos bloqueios, mostrar apenas o primeiro ou combinar
+        const timeRanges = props.blockStatus.blocks
+          .filter(block => !block.dia_inteiro && !block.dia_completo) // Filtrar apenas bloqueios parciais
+          .map(block => {
+            const inicio = block.horario_inicio;
+            const fim = block.horario_fim;
+            return formatTimeRange(dateStr, inicio, fim, props.timezone);
+          })
+          .filter(range => range); // Remover strings vazias
 
-        if (inicio && fim) {
-          return `${inicio} - ${fim}`;
-        } else if (inicio) {
-          return inicio;
+        if (timeRanges.length > 0) {
+          // Mostrar o primeiro range ou combinar múltiplos (você pode customizar aqui)
+          return timeRanges[0]; // Apenas o primeiro para não sobrecarregar visualmente
         }
       }
       return null;
     });
 
     const reasonText = computed(() => {
-      if (props.blockStatus?.blocked && props.blockStatus?.block) {
-        return props.blockStatus.block.motivo || null;
+      if (props.blockStatus?.blocked && props.blockStatus?.blocks?.length > 0) {
+        // Pegar o motivo do primeiro bloqueio
+        return props.blockStatus.blocks[0].motivo || null;
       }
       return null;
     });

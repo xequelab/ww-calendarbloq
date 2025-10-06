@@ -80,6 +80,8 @@
         :weekday-block-icon="weekdayBlockIcon"
         :partial-block-icon="partialBlockIcon"
         :show-time-label="showTimeLabel"
+        :time-label-start-time="timeLabelStartTime"
+        :time-label-end-time="timeLabelEndTime"
         :show-reason-label="showReasonLabel"
         :day-number-font-size="dayNumberFontSize"
         :time-label-font-size="timeLabelFontSize"
@@ -491,6 +493,8 @@ export default {
     const partialBlockIcon = computed(() => props.content?.partialBlockIcon || '');
     const showLegend = computed(() => props.content?.showLegend !== false);
     const showTimeLabel = computed(() => props.content?.showTimeLabel || false);
+    const timeLabelStartTime = computed(() => props.content?.timeLabelStartTime || '');
+    const timeLabelEndTime = computed(() => props.content?.timeLabelEndTime || '');
     const showReasonLabel = computed(() => props.content?.showReasonLabel || false);
 
     const headerGap = computed(() => props.content?.headerGap || '8px');
@@ -586,6 +590,8 @@ export default {
       partialBlockIcon,
       showLegend,
       showTimeLabel,
+      timeLabelStartTime,
+      timeLabelEndTime,
       showReasonLabel,
       legendLabels,
       blockIconHTML,

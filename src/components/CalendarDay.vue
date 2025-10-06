@@ -79,6 +79,14 @@ export default {
       type: Boolean,
       default: false
     },
+    timeLabelStartTime: {
+      type: String,
+      default: ''
+    },
+    timeLabelEndTime: {
+      type: String,
+      default: ''
+    },
     showReasonLabel: {
       type: Boolean,
       default: false
@@ -116,6 +124,18 @@ export default {
     });
 
     const timeText = computed(() => {
+      // Prioridade 1: Usar valores customizados das props
+      if (props.timeLabelStartTime || props.timeLabelEndTime) {
+        if (props.timeLabelStartTime && props.timeLabelEndTime) {
+          return `${props.timeLabelStartTime} - ${props.timeLabelEndTime}`;
+        } else if (props.timeLabelStartTime) {
+          return props.timeLabelStartTime;
+        } else if (props.timeLabelEndTime) {
+          return props.timeLabelEndTime;
+        }
+      }
+
+      // Prioridade 2: Auto-extrair do blockStatus
       if (props.blockStatus?.blocked && props.blockStatus?.block) {
         const block = props.blockStatus.block;
 
@@ -123,7 +143,7 @@ export default {
         const fim = block.horario_fim;
 
         if (inicio && fim) {
-          return `${inicio}-${fim}`;
+          return `${inicio} - ${fim}`;
         } else if (inicio) {
           return inicio;
         }

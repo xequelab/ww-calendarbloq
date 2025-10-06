@@ -272,26 +272,49 @@ export default {
       }
       /* wwEditor:end */
     },
-    timeLabelContent: {
+    timeLabelStartTime: {
       label: {
-        en: 'Time label content',
-        pt: 'Conteúdo da label de horário'
+        en: 'Start time',
+        pt: 'Horário inicial'
       },
       type: 'Text',
       section: 'settings',
       bindable: true,
       defaultValue: '',
       options: {
-        placeholder: 'e.g., 09:00-17:00'
+        placeholder: 'HH:mm'
       },
       hidden: (content) => !content.showTimeLabel,
       /* wwEditor:start */
       bindingValidation: {
         type: 'string',
-        tooltip: 'Bind to any data or use formula'
+        tooltip: 'Bind to start time in HH:mm format (e.g., 09:00)'
       },
       propertyHelp: {
-        tooltip: 'Custom content for time label. Leave empty to auto-extract from block data.'
+        tooltip: 'Start time for the block in HH:mm format. Leave empty to auto-extract from block data.'
+      }
+      /* wwEditor:end */
+    },
+    timeLabelEndTime: {
+      label: {
+        en: 'End time',
+        pt: 'Horário final'
+      },
+      type: 'Text',
+      section: 'settings',
+      bindable: true,
+      defaultValue: '',
+      options: {
+        placeholder: 'HH:mm'
+      },
+      hidden: (content) => !content.showTimeLabel,
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'string',
+        tooltip: 'Bind to end time in HH:mm format (e.g., 17:00)'
+      },
+      propertyHelp: {
+        tooltip: 'End time for the block in HH:mm format. Leave empty to auto-extract from block data.'
       }
       /* wwEditor:end */
     },

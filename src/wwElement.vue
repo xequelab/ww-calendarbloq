@@ -656,6 +656,7 @@ export default {
   width: 100%;
   max-width: 100%;
   font-family: inherit;
+  box-sizing: border-box;
 }
 
 .calendar-header {

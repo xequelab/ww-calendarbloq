@@ -547,7 +547,6 @@ export default {
     const timeLabelFontSize = computed(() => props.content?.timeLabelFontSize || '10px');
     const reasonLabelFontSize = computed(() => props.content?.reasonLabelFontSize || '10px');
     const legendFontSize = computed(() => props.content?.legendFontSize || '12px');
-    const fontFamily = computed(() => props.content?.fontFamily || 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif');
 
     const legendLabels = computed(() => props.content?.legendLabels || {
       available: 'Disponível',
@@ -648,12 +647,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
 .appointment-calendar {
   width: 100%;
   max-width: 100%;
-  font-family: v-bind(fontFamily);
+  font-family: inherit;
 }
 
 .calendar-header {

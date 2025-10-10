@@ -640,7 +640,12 @@ export default {
       weekdayBlockIconHTML,
       partialBlockIconHTML,
       prevIconHTML,
-      nextIconHTML
+      nextIconHTML,
+      weekdayFontSize,
+      dayNumberFontSize,
+      timeLabelFontSize,
+      reasonLabelFontSize,
+      legendFontSize
     };
   }
 };
@@ -671,6 +676,7 @@ export default {
       padding: 8px 12px;
       font-size: v-bind(headerFontSize);
       font-weight: 500;
+      font-family: inherit;
       cursor: pointer;
       outline: none;
       transition: border-color 0.2s ease;

@@ -294,6 +294,7 @@ export default {
   transition: all 0.2s ease;
   border: 1px solid #dee2e6;
   min-height: 50px;
+  font-family: inherit;
 
   &.is-other-month {
     pointer-events: none;

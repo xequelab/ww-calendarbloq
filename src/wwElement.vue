@@ -492,7 +492,6 @@ export default {
     
     const containerStyles = computed(() => ({
       backgroundColor: props.content?.backgroundColor || '#ffffff',
-      padding: props.content?.padding || '16px',
       borderRadius: props.content?.borderRadius || '8px',
       boxShadow: props.content?.boxShadow || '0 2px 8px rgba(0, 0, 0, 0.1)'
     }));
@@ -554,6 +553,9 @@ export default {
       partialBlock: 'Bloqueio parcial',
       fullBlock: 'Bloqueado'
     });
+
+    // Computed property para padding
+    const containerPadding = computed(() => props.content?.padding !== undefined ? props.content.padding : '16px');
 
     const blockIconHTML = ref('');
     const availableIconHTML = ref('');
@@ -645,7 +647,8 @@ export default {
       dayNumberFontSize,
       timeLabelFontSize,
       reasonLabelFontSize,
-      legendFontSize
+      legendFontSize,
+      containerPadding
     };
   }
 };
@@ -657,6 +660,7 @@ export default {
   max-width: 100%;
   font-family: inherit;
   box-sizing: border-box;
+  padding: v-bind(containerPadding) !important;
 }
 
 .calendar-header {

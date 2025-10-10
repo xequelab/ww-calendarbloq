@@ -764,14 +764,14 @@ tooltip: 'Background color for navigation buttons. Set to transparent for icon-o
 /* wwEditor:end */
 },
 padding: {
-label: { 
+label: {
 en: 'Padding',
 pt: 'Espaçamento interno'
 },
 type: 'Length',
 section: 'style',
 bindable: true,
-defaultValue: '20px',
+defaultValue: '16px',
 options: {
 unitChoices: [
 { value: 'px', label: 'px', min: 0, max: 100 },

@@ -492,7 +492,7 @@ export default {
     
     const containerStyles = computed(() => ({
       backgroundColor: props.content?.backgroundColor || '#ffffff',
-      padding: props.content?.padding || '20px',
+      padding: props.content?.padding || '16px',
       borderRadius: props.content?.borderRadius || '8px',
       boxShadow: props.content?.boxShadow || '0 2px 8px rgba(0, 0, 0, 0.1)'
     }));

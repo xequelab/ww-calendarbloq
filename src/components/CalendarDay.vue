@@ -154,7 +154,7 @@ export default {
     });
 
     const hasMultipleBlocks = computed(() => {
-      return blockCount.value > 1 && !isFullDayBlocked.value;
+      return blockCount.value >= 1 && !isFullDayBlocked.value;
     });
 
     const dotColor = computed(() => {

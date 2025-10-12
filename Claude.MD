@@ -17,7 +17,7 @@ Componente especializado de calendário desenvolvido para sistemas de agendament
 - Sistema de bloqueio em quatro níveis: dias disponíveis, bloqueios semanais recorrentes, bloqueios parciais e bloqueios de dia completo
 - **Conversão automática de timezone** - Horários UTC são convertidos automaticamente para o fuso horário configurado e exibidos nos dias bloqueados parcialmente
 - **Suporte para múltiplos bloqueios por dia** - Detecta e processa todos os bloqueios de uma mesma data
-- **Indicadores visuais para múltiplos bloqueios** - Pequenos pontos (dots) na parte inferior da célula indicam a quantidade de bloqueios parciais (máximo de 5 dots visíveis, com contador "+N" para quantidades maiores)
+- **Indicadores visuais para bloqueios parciais** - Pequenos pontos (dots) na parte inferior da célula indicam a quantidade de bloqueios parciais, desde 1 bloqueio (máximo de 5 dots visíveis, com contador "+N" para quantidades maiores)
 - Distinção visual através de codificação por cores (verde para disponível, cinza para bloqueios semanais, vermelho claro para bloqueios parciais, vermelho escuro para bloqueios completos)
 - Datas bloqueadas completamente exibem ícone de cadeado e fundo vermelho distinto
 - Legenda interativa mostrando todos os estados de disponibilidade com indicadores de cores
@@ -91,7 +91,7 @@ Componente especializado de calendário desenvolvido para sistemas de agendament
 - A propriedade specificBlocks foi projetada para trabalhar diretamente com resultados de consultas Supabase da tabela "bloqueios_profissional"
 - O campo `dia_inteiro` (ou `dia_completo` para retrocompatibilidade) determina se um bloqueio específico aparece como bloqueado completamente (com ícone) ou bloqueio parcial
 - **Suporte para múltiplos bloqueios por dia**: O componente detecta e retorna TODOS os bloqueios de uma data específica através do evento dateClick (blockInfo e blockIds são arrays)
-- **Indicadores visuais inteligentes**: Quando há múltiplos bloqueios parciais no mesmo dia, pequenos pontos vermelhos aparecem na parte inferior da célula (máximo 5 dots + contador "+N" para mais de 5 bloqueios). Bloqueios de dia completo não exibem os dots pois já têm o ícone de cadeado
+- **Indicadores visuais inteligentes**: Bloqueios parciais exibem pequenos pontos vermelhos na parte inferior da célula (1 dot = 1 bloqueio, máximo 5 dots + contador "+N" para mais de 5 bloqueios). Bloqueios de dia completo não exibem os dots pois já têm o ícone de cadeado
 - **Todos os dados do bloqueio** (id, data_inicio, data_fim, dia_inteiro, created_at, motivo, horario_inicio, horario_fim) são passados no evento dateClick através de blockInfo e blockIds como arrays de objetos completos, permitindo workflows complexos no WeWeb
 - **Dados completos dos bloqueios expostos**: A variável blockIds e o campo blockIds no evento dateClick contêm arrays com todos os dados completos de cada bloqueio da data clicada (não apenas IDs), facilitando operações de atualização/exclusão em massa no banco de dados sem necessidade de consultas adicionais
 - **Horários UTC expostos**: As variáveis blockHorarioInicioUtc e blockHorarioFimUtc contêm arrays com os horários UTC de todos os bloqueios, prontos para conversão de timezone via JavaScript

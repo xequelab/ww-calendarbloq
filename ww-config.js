@@ -19,7 +19,16 @@ export default {
         isBlocked: false,
         blockType: '',
         blockInfo: [],
-        blockIds: []
+        blockIds: [{
+          id: '',
+          data_inicio: '',
+          data_fim: '',
+          dia_inteiro: false,
+          created_at: '',
+          motivo: '',
+          horario_inicio: '',
+          horario_fim: ''
+        }]
       },
       default: true
     },

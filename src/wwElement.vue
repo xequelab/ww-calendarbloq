@@ -280,7 +280,7 @@ export default {
       defaultValue: []
     });
 
-    const { value: blockIds, setValue: setBlockIds } = wwLib.wwVariable.useComponentVariable({
+    const { value: allBlocksData, setValue: setAllBlocksData } = wwLib.wwVariable.useComponentVariable({
       uid: props.uid,
       name: 'blockIds',
       type: 'array',
@@ -335,7 +335,6 @@ export default {
       let blockDetailsArray = [];
       let horariosInicioUtc = [];
       let horariosFimUtc = [];
-      let blockIdsArray = [];
 
       if (blockStatus.blocked && blockStatus.blocks && blockStatus.blocks.length > 0) {
         // Processar TODOS os bloqueios daquela data
@@ -343,11 +342,6 @@ export default {
           const diaInteiro = block.dia_inteiro !== undefined
             ? block.dia_inteiro
             : block.dia_completo;
-
-          // Adicionar ID ao array de IDs
-          if (block.id) {
-            blockIdsArray.push(block.id);
-          }
 
           // Adicionar horários UTC aos arrays se existirem
           if (block.horario_inicio) {
@@ -391,10 +385,10 @@ export default {
         setBlockMotivo(null);
       }
 
-      // Atualizar arrays de horários UTC e IDs
+      // Atualizar arrays de horários UTC e todos os dados dos bloqueios
       setBlockHorarioInicioUtc(horariosInicioUtc);
       setBlockHorarioFimUtc(horariosFimUtc);
-      setBlockIds(blockIdsArray);
+      setAllBlocksData(blockDetailsArray);
 
       emit('trigger-event', {
         name: 'dateClick',
@@ -404,7 +398,7 @@ export default {
           isBlocked: blockStatus.blocked,
           blockType: blockStatus.type,
           blockInfo: blockDetailsArray.length > 0 ? blockDetailsArray : null,
-          blockIds: blockIdsArray
+          blockIds: blockDetailsArray
         }
       });
     };

@@ -18,7 +18,8 @@ export default {
         timestamp: 0,
         isBlocked: false,
         blockType: '',
-        blockInfo: []
+        blockInfo: [],
+        blockIds: []
       },
       default: true
     },

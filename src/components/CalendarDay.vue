@@ -9,6 +9,17 @@
     <span class="day-number" :style="{ fontSize: dayNumberFontSize }">{{ dayNumber }}</span>
     <span v-if="showTimeLabel && timeText && !isFullDayBlocked" class="time-label" :style="{ fontSize: timeLabelFontSize }">{{ timeText }}</span>
     <span v-if="showReasonLabel && reasonText" class="reason-label" :style="{ fontSize: reasonLabelFontSize }">{{ reasonText }}</span>
+
+    <!-- Indicador de múltiplos bloqueios -->
+    <div v-if="hasMultipleBlocks" class="block-indicators">
+      <span
+        v-for="index in Math.min(blockCount, 5)"
+        :key="index"
+        class="block-dot"
+        :style="{ backgroundColor: dotColor }"
+      ></span>
+      <span v-if="blockCount > 5" class="block-count">+{{ blockCount - 5 }}</span>
+    </div>
   </div>
 </template>
 
@@ -130,6 +141,26 @@ export default {
         );
       }
       return false;
+    });
+
+    const blockCount = computed(() => {
+      if (props.blockStatus?.blocked && props.blockStatus?.type === 'specific' && props.blockStatus?.blocks?.length > 0) {
+        // Contar apenas bloqueios parciais (não dia inteiro)
+        return props.blockStatus.blocks.filter(block =>
+          !(block?.dia_completo === true || block?.dia_inteiro === true)
+        ).length;
+      }
+      return 0;
+    });
+
+    const hasMultipleBlocks = computed(() => {
+      return blockCount.value > 1 && !isFullDayBlocked.value;
+    });
+
+    const dotColor = computed(() => {
+      // Usar uma cor contrastante baseada no fundo do bloqueio parcial
+      // Vamos usar um tom mais escuro do vermelho para os dots
+      return '#dc3545'; // Vermelho mais escuro para contraste
     });
 
     const timeText = computed(() => {
@@ -269,6 +300,9 @@ export default {
       isCurrentDay,
       blockInfo,
       isFullDayBlocked,
+      blockCount,
+      hasMultipleBlocks,
+      dotColor,
       timeText,
       reasonText,
       currentIconHTML,
@@ -363,6 +397,32 @@ export default {
     white-space: nowrap;
     font-weight: 400;
     font-style: italic;
+  }
+
+  .block-indicators {
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    z-index: 2;
+
+    .block-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      display: inline-block;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .block-count {
+      font-size: 9px;
+      font-weight: 700;
+      color: #dc3545;
+      margin-left: 2px;
+    }
   }
 }
 </style>

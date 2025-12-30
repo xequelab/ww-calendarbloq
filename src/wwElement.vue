@@ -321,11 +321,49 @@ export default {
       return checkIsCurrentMonth(date, currentDate.value);
     };
     
+    const disableClick = computed(() => props.content?.disableClick || false);
+
     const handleDayClick = (date) => {
       if (isEditing.value) return;
 
       const blockStatus = getBlockStatus(date);
       const dateISO = formatDateISO(date);
+
+      // Se o clique está desabilitado, emitir evento diferente e retornar
+      if (disableClick.value) {
+        // Preparar arrays de informações detalhadas dos bloqueios para o evento
+        let blockDetailsArray = [];
+        if (blockStatus.blocked && blockStatus.blocks && blockStatus.blocks.length > 0) {
+          blockDetailsArray = blockStatus.blocks.map(block => {
+            const diaInteiro = block.dia_inteiro !== undefined
+              ? block.dia_inteiro
+              : block.dia_completo;
+            return {
+              id: block.id || null,
+              data_inicio: block.data_inicio || null,
+              data_fim: block.data_fim || null,
+              dia_inteiro: diaInteiro,
+              created_at: block.created_at || null,
+              motivo: block.motivo || null,
+              horario_inicio: block.horario_inicio || null,
+              horario_fim: block.horario_fim || null
+            };
+          });
+        }
+
+        emit('trigger-event', {
+          name: 'disabledDateClick',
+          event: {
+            date: dateISO,
+            timestamp: date.getTime(),
+            isBlocked: blockStatus.blocked,
+            blockType: blockStatus.type,
+            blockInfo: blockDetailsArray.length > 0 ? blockDetailsArray : null,
+            blockIds: blockDetailsArray
+          }
+        });
+        return;
+      }
 
       setSelectedDate(dateISO);
       setIsBlocked(blockStatus.blocked);

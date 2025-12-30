@@ -34,13 +34,37 @@ export default {
     },
     {
       name: 'monthChange',
-      label: { 
+      label: {
         en: 'On month change',
         pt: 'Ao mudar mês'
       },
       event: {
         month: '',
         direction: ''
+      }
+    },
+    {
+      name: 'disabledDateClick',
+      label: {
+        en: 'On disabled date click',
+        pt: 'Ao clicar em data desabilitada'
+      },
+      event: {
+        date: '',
+        timestamp: 0,
+        isBlocked: false,
+        blockType: '',
+        blockInfo: [],
+        blockIds: [{
+          id: '',
+          data_inicio: '',
+          data_fim: '',
+          dia_inteiro: false,
+          created_at: '',
+          motivo: '',
+          horario_inicio: '',
+          horario_fim: ''
+        }]
       }
     }
   ],
@@ -637,6 +661,25 @@ export default {
       },
       propertyHelp: {
         tooltip: 'Optional icon displayed on partially blocked days (leave empty for no icon)'
+      }
+      /* wwEditor:end */
+    },
+    disableClick: {
+      label: {
+        en: 'Disable click',
+        pt: 'Desabilitar clique'
+      },
+      type: 'OnOff',
+      section: 'settings',
+      bindable: true,
+      defaultValue: false,
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'boolean',
+        tooltip: 'Set to true to disable all date clicks on the calendar'
+      },
+      propertyHelp: {
+        tooltip: 'When enabled, clicking on any date will be blocked and trigger the disabledDateClick event instead of dateClick'
       }
       /* wwEditor:end */
     },
